@@ -22,15 +22,18 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
     
         ofVideoGrabber 		vidGrabber;
-//        ofTexture			videoTexture;
         int 				camWidth;
         int 				camHeight;
     
         //    openCV classes
-        ofxCvColorImage cameraImage;
-        ofxCvColorImage colorFromGray;
+        ofxCvColorImage cameraImage, diffImage;
         ofxCvGrayscaleImage grayImage, grayImagePrev, diff;
-    
         ofxCvFloatImage diffFloat, bufferFloat;
+    
+        ofShader shader;
+        ofFbo fbo;
+        ofImage waves, face;
+    
+        ofTexture diffTex;
     
 };

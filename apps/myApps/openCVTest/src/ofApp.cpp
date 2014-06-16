@@ -4,8 +4,8 @@
 void ofApp::setup(){
     using namespace std;
     
-    camWidth 		= 1024;	// try to grab at this size.
-	camHeight 		= 768;
+    camWidth 		= ofGetWidth();	// try to grab at this size.
+	camHeight 		= ofGetHeight();
 	
     //we can now get back a list of devices.
 	vector<ofVideoDevice> devices = vidGrabber.listDevices();
@@ -23,14 +23,12 @@ void ofApp::setup(){
 	vidGrabber.setDesiredFrameRate(60);
 	vidGrabber.initGrabber(camWidth,camHeight);
 	
-	videoTexture.allocate(camWidth,camHeight, GL_RGB);
 	ofSetVerticalSync(true);
-    
     grayImage.allocate(camWidth, camHeight);
     
     cameraImage.allocate(camWidth, camHeight);
     bufferFloat.allocate(camWidth, camHeight);
-
+    colorFromGray.allocate(camWidth, camHeight);
 }
 
 //--------------------------------------------------------------
@@ -59,6 +57,8 @@ void ofApp::update(){
                 bufferFloat += diffFloat;
             }
         }
+        colorFromGray = bufferFloat;
+        //videoTexture.loadData(colorFromGray.getPixels(), ofGetWidth(), ofGetHeight(), GL_RGB);
     }
 }
 
@@ -66,7 +66,9 @@ void ofApp::update(){
 void ofApp::draw(){
     ofSetColor(255);
     
-    bufferFloat.draw(0, 0, camWidth, camHeight);
+//    bufferFloat.draw(0, 0, ofGetWidth(), ofGetHeight());
+//    videoTexture.draw(0, 0);
+    colorFromGray.draw(0, 0);
 }
 
 //--------------------------------------------------------------
