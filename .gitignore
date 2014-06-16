@@ -8,6 +8,7 @@ INSTALL.md
 LICENSE.md
 other/
 projectGenerator_osx
+projectGenerator
 README.md
 scripts/
 libs/
@@ -22,3 +23,10 @@ Makefile
 *.xcconfig
 *.app
 *.app/
+*.sln
+*.vcxproj*
+*.rc
+*.sdf
+obj/
+*.exp
+*.opensdf
