@@ -27,7 +27,9 @@ void ofApp::setup(){
         }
 	}
     
-    vidGrabber.setDeviceID(0);
+    //if there are multiple cameras on the device,
+    //this will need to be changed to the appropriate one
+    vidGrabber.setDeviceID(1);
 	vidGrabber.setDesiredFrameRate(60);
 	vidGrabber.initGrabber(camWidth,camHeight);
 
@@ -49,7 +51,6 @@ void ofApp::draw(){
     desert.getTextureReference().bind();
     forest.getTextureReference().bind();
     
-//    shader.setUniformTexture("mask", mask, 0);
     shader.setUniformTexture("mask", vidGrabber.getTextureReference(), 0); //GL_LUMINANCE?
     shader.setUniformTexture("top", desert.getTextureReference(), 1);
 	shader.setUniformTexture("bottom", forest.getTextureReference(), 2);
