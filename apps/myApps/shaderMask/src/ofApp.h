@@ -19,7 +19,8 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
     
     ofShader shader;
-    ofTexture forest, desert, mask, videoTexture;
+    ofTexture videoTexture;
+    ofImage forest, desert;
     
     ofVideoGrabber 		vidGrabber;
     int camWidth, camHeight;

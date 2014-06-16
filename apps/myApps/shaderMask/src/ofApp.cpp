@@ -4,17 +4,16 @@
 void ofApp::setup(){        
     shader.load("shaders/shaderVert.c","shaders/shaderFrag.c");
     
-//    textures
-    ofLoadImage(forest, "forest.jpg");
-    ofLoadImage(desert, "desert.jpg");
-    
+  
 //    images
-//    mask.loadImage("mask.jpg");
-//    forest.loadImage("forest.jpg");
-//    desert.loadImage("desert.jpg");
+    forest.loadImage("forest.jpg");
+    desert.loadImage("desert.jpg");
     
     camWidth 		= ofGetWidth();	// try to grab at this size.
 	camHeight 		= ofGetHeight();
+    
+    forest.resize(ofGetWidth(), ofGetHeight());
+    desert.resize(ofGetWidth(), ofGetHeight());
 	
     //we can now get back a list of devices.
 	vector<ofVideoDevice> devices = vidGrabber.listDevices();
@@ -47,10 +46,13 @@ void ofApp::update(){
 void ofApp::draw(){
     shader.begin();
     
+    desert.getTextureReference().bind();
+    forest.getTextureReference().bind();
+    
 //    shader.setUniformTexture("mask", mask, 0);
     shader.setUniformTexture("mask", vidGrabber.getTextureReference(), 0); //GL_LUMINANCE?
-    shader.setUniformTexture("top", desert, 1);
-	shader.setUniformTexture("bottom", forest, 2);
+    shader.setUniformTexture("top", desert.getTextureReference(), 1);
+	shader.setUniformTexture("bottom", forest.getTextureReference(), 2);
 
     
     //need to pass in some vertex data to the shader
