@@ -23,6 +23,11 @@ void ofApp::setup(){
         }
 	}
     
+    if(waves.getWidth() != ofGetWidth()){
+        waves.resize(ofGetWidth(), ofGetHeight());
+         face.resize(ofGetWidth(), ofGetHeight());
+    }
+    
     //change this if you need to use primary camera
 	vidGrabber.setDeviceID(0);
 	vidGrabber.setDesiredFrameRate(60);
@@ -54,7 +59,7 @@ void ofApp::update(){
             diff.absDiff(grayImage, grayImagePrev);
             
             diffFloat = diff; //convert diffImage to float image
-            diffFloat *= 2.0; //amplify
+            diffFloat *= 5.0; //amplify
             
             if(!bufferFloat.bAllocated){
                 //If the buffer is not initialized, then just set it equal to diffFloat
@@ -80,10 +85,12 @@ void ofApp::draw(){
     shader.setUniformTexture("mask", diffTex, 0);
     shader.setUniformTexture("top", waves.getTextureReference(), 1);
 
-
     ofRect(0, 0, ofGetWidth(), ofGetHeight());
     shader.end();
     fbo.end();
+
+    ofScale(-1.0, 1.0);
+    ofTranslate(-ofGetWidth(), 0);
     
     waves.draw(0, 0);
     face.draw(0, 0);
