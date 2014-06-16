@@ -2,11 +2,16 @@
 #version 410
 
 uniform sampler2DRect mask;
-uniform sampler2DRect top; //"top"
+uniform sampler2DRect top;
+uniform sampler2DRect bottom;
 
 uniform float time; //Parameter which we will pass from OF
 
 out vec4 outputColor;
+
+//the origin for the gl_FragCoord by default starts in the lower left
+//this sets it to the upper left
+layout(origin_upper_left) in vec4 gl_FragCoord;
 
 float getAverage(vec3 color){
     //might be a better way to do this
@@ -27,12 +32,14 @@ void main()
     
     //get sample color from texture
     vec4 topColor = texture(top, pos);
+    vec4 bottomColor = texture(bottom, pos);
     vec4 maskColor = texture(mask, pos);
 
     //polarize the masking value
-    float maskValue = polarize(getAverage(maskColor.rgb));
-    
-    topColor = vec4(topColor.rgb, maskValue);
-    
-    outputColor = topColor;
+    float maskValue = polarize(maskColor.r);
+
+    vec3 alphaTop = maskValue * topColor.rgb;
+    vec3 alphaBottom = (1.0 - maskValue) * bottomColor.rgb;
+
+    outputColor = vec4((alphaTop + alphaBottom), 1.0);
 }

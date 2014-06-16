@@ -5,7 +5,6 @@ void ofApp::setup(){
     shader.load("shaders/shaderVert.c","shaders/shaderFrag.c");
     
 //    textures
-    ofLoadImage(mask, "mask.jpg");
     ofLoadImage(forest, "forest.jpg");
     ofLoadImage(desert, "desert.jpg");
     
@@ -13,7 +12,6 @@ void ofApp::setup(){
 //    mask.loadImage("mask.jpg");
 //    forest.loadImage("forest.jpg");
 //    desert.loadImage("desert.jpg");
-    fbo.allocate(ofGetWidth(), ofGetHeight());
     
     camWidth 		= ofGetWidth();	// try to grab at this size.
 	camHeight 		= ofGetHeight();
@@ -33,8 +31,9 @@ void ofApp::setup(){
     vidGrabber.setDeviceID(0);
 	vidGrabber.setDesiredFrameRate(60);
 	vidGrabber.initGrabber(camWidth,camHeight);
-    
-    videoTexture.allocate(camWidth,camHeight, GL_RGB);
+
+    //GL_LUMINANCE is an openGL constant. only store grayscale 
+    videoTexture.allocate(camWidth,camHeight, GL_LUMINANCE);
 	ofSetVerticalSync(true);
 }
 
@@ -42,26 +41,22 @@ void ofApp::setup(){
 void ofApp::update(){
     
     vidGrabber.update();
-    //set mask texture to video
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    fbo.begin();
     shader.begin();
     
 //    shader.setUniformTexture("mask", mask, 0);
-    shader.setUniformTexture("mask", vidGrabber.getTextureReference(), 0);
+    shader.setUniformTexture("mask", vidGrabber.getTextureReference(), 0); //GL_LUMINANCE?
     shader.setUniformTexture("top", desert, 1);
+	shader.setUniformTexture("bottom", forest, 2);
 
     
     //need to pass in some vertex data to the shader
     ofRect(0, 0, ofGetWidth(), ofGetHeight());
-    
-    shader.end();
-    fbo.end();
-    forest.draw(0, 0, ofGetWidth(), ofGetHeight());
-    fbo.draw(0, 0);
+
+	shader.end();
 }
 
 //--------------------------------------------------------------
