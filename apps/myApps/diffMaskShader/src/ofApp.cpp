@@ -1,19 +1,15 @@
 #include "ofApp.h"
 
 //--------------------------------------------------------------
-void ofApp::setup(){        
-    shader.load("shaders/shaderVert.c","shaders/shaderFrag.c");
+void ofApp::setup(){
+    shader.load("shaders/shaderVert.c", "shaders/shaderFrag.c");
     
-  
-//    images
-    forest.loadImage("forest.jpg");
-    desert.loadImage("desert.jpg");
+    //images
+    waves.loadImage("waves.png");
+    face.loadImage("face.png");
     
     camWidth 		= ofGetWidth();	// try to grab at this size.
 	camHeight 		= ofGetHeight();
-    
-    forest.resize(ofGetWidth(), ofGetHeight());
-    desert.resize(ofGetWidth(), ofGetHeight());
 	
     //we can now get back a list of devices.
 	vector<ofVideoDevice> devices = vidGrabber.listDevices();
@@ -27,43 +23,70 @@ void ofApp::setup(){
         }
 	}
     
-    //if there are multiple cameras on the device,
-    //this will need to be changed to the appropriate one
-    vidGrabber.setDeviceID(1);
+    //change this if you need to use primary camera
+	vidGrabber.setDeviceID(0);
 	vidGrabber.setDesiredFrameRate(60);
 	vidGrabber.initGrabber(camWidth,camHeight);
 
-    //GL_LUMINANCE is an openGL constant. only store grayscale 
-    videoTexture.allocate(camWidth,camHeight, GL_LUMINANCE);
 	ofSetVerticalSync(true);
     
-    fbo.allocate(ofGetWidth(), ofGetHeight());
+    grayImage.allocate(camWidth, camHeight);
+    cameraImage.allocate(camWidth, camHeight);
+    bufferFloat.allocate(camWidth, camHeight);
+    diffImage.allocate(camWidth, camHeight);
+    fbo.allocate(camWidth, camHeight);
+    diffTex.allocate(camWidth, camHeight, GL_RGB);
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    
     vidGrabber.update();
+    
+    if(vidGrabber.isFrameNew()){
+        if(grayImage.bAllocated){
+            grayImagePrev = grayImage;
+        }
+        
+        cameraImage.setFromPixels(vidGrabber.getPixelsRef());
+        grayImage = cameraImage;
+        
+        if(grayImage.bAllocated){
+            diff.absDiff(grayImage, grayImagePrev);
+            
+            diffFloat = diff; //convert diffImage to float image
+            diffFloat *= 2.0; //amplify
+            
+            if(!bufferFloat.bAllocated){
+                //If the buffer is not initialized, then just set it equal to diffFloat
+                bufferFloat = diffFloat;
+            }else{
+                bufferFloat *= 0.85; //dat magic number
+                bufferFloat += diffFloat;
+            }
+        }
+        diffImage = bufferFloat;
+        diffTex.loadData(diffImage.getPixels(), ofGetWidth(), ofGetHeight(), GL_RGB);
+    }
+
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
     fbo.begin();
     shader.begin();
-    
-    desert.getTextureReference().bind();
-    forest.getTextureReference().bind();
-    
-    shader.setUniformTexture("mask", vidGrabber.getTextureReference(), 0); //GL_LUMINANCE?
-    shader.setUniformTexture("top", desert.getTextureReference(), 1);
-	shader.setUniformTexture("bottom", forest.getTextureReference(), 2);
+    waves.getTextureReference().bind();
+    diffTex.bind();
 
-    
-    //need to pass in some vertex data to the shader
+    shader.setUniformTexture("mask", diffTex, 0);
+    shader.setUniformTexture("top", waves.getTextureReference(), 1);
+
+
     ofRect(0, 0, ofGetWidth(), ofGetHeight());
-
-	shader.end();
+    shader.end();
     fbo.end();
+    
+    waves.draw(0, 0);
+    face.draw(0, 0);
     fbo.draw(0, 0);
 }
 
@@ -78,7 +101,7 @@ void ofApp::keyReleased(int key){
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseMoved(int x, int y){
+void ofApp::mouseMoved(int x, int y ){
 
 }
 
