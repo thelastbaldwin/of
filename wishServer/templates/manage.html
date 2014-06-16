@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+
+{% block body %}
+    <h1> Dandelion Management </h1>
+
+    {% if todelete %}
+    <h2>The following were marked as 'granted' <h2>
+    <ul>
+        {% for d in todelete %}
+            <li>{{d}}</li>
+        {% endfor %}
+    </ul>
+
+    {% endif %}
+
+    {% if wishes %}
+    	<form method="post">
+    	   {% for w in wishes %}
+    	       <input type="checkbox" name="wish" value="{{w['id']}}">{{w['text']}}</input><br />
+    	   {% endfor %}
+    	   <input type="submit" value="Submit"/>
+    	</form>
+    {% endif %}
+{% endblock %}
