@@ -13,6 +13,7 @@ scripts/
 libs/
 examples/
 emptyExample/
+bin/
 
 *.xcodeproj
 *.xcodeproj/
