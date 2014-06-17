@@ -2,7 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxOpenCv.h"
-#include <iostream>
+#include "ofxGui.h"
 
 class ofApp : public ofBaseApp{
 
@@ -36,4 +36,8 @@ class ofApp : public ofBaseApp{
     
         ofTexture diffTex;
     
+        //gui stuff
+        bool bHide;
+        ofxPanel gui;
+        ofxFloatSlider opacity, amplitude;
 };

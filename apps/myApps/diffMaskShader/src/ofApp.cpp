@@ -41,6 +41,12 @@ void ofApp::setup(){
     diffImage.allocate(camWidth, camHeight);
     fbo.allocate(camWidth, camHeight);
     diffTex.allocate(camWidth, camHeight, GL_RGB);
+    
+    //gui stuff
+    gui.setup();
+    gui.add(opacity.setup("opacity", 0.80, 0.0, 0.95));
+    gui.add(amplitude.setup("amplitude", 8.0, 0.0, 50.0));
+    bHide = false;
 }
 
 //--------------------------------------------------------------
@@ -59,13 +65,13 @@ void ofApp::update(){
             diff.absDiff(grayImage, grayImagePrev);
             
             diffFloat = diff; //convert diffImage to float image
-            diffFloat *= 5.0; //amplify
+            diffFloat *= amplitude; //amplify
             
             if(!bufferFloat.bAllocated){
                 //If the buffer is not initialized, then just set it equal to diffFloat
                 bufferFloat = diffFloat;
             }else{
-                bufferFloat *= 0.85; //dat magic number
+                bufferFloat *= opacity; //dat magic number
                 bufferFloat += diffFloat;
             }
         }
@@ -89,17 +95,25 @@ void ofApp::draw(){
     shader.end();
     fbo.end();
 
+    ofPushMatrix();
     ofScale(-1.0, 1.0);
     ofTranslate(-ofGetWidth(), 0);
     
     waves.draw(0, 0);
     face.draw(0, 0);
     fbo.draw(0, 0);
+    ofPopMatrix();
+    
+    if(bHide){
+		gui.draw();
+	}
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
+    if( key == 'h' ){
+		bHide = !bHide;
+	}
 }
 
 //--------------------------------------------------------------
