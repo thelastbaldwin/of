@@ -36,10 +36,7 @@ void ofApp::setup()
     idY.allocate( camWidth *   DECIMATE_AMT, camHeight * DECIMATE_AMT);
     color1.allocate(camWidth, camHeight);
     colorTest.allocate(camWidth, camHeight);
-    
-    //Make morphing at first time
-    morphImageIndex = 1; //unused?
-    
+        
     //Load checkerboard image
     foreground.loadImage("foreground.png");
     background.loadImage("background.png");
@@ -120,17 +117,6 @@ void ofApp::update(){
         
         w = gray1.width;
         h = gray1.height;
-        
-        //Flow image
-        planeX = flowX;
-        planeY = flowY;
-        
-        for (int y=0; y<h; y++) {
-            for (int x=0; x<w; x++) {
-                idX.getPixelsAsFloats()[ x + w * y ] = x;
-                idY.getPixelsAsFloats()[ x + w * y ] = y;
-            }
-        }
     }
 }
 
@@ -147,31 +133,23 @@ void ofApp::draw(){
     shader.end();
     fboHueShift.end();
     
+	//draw the contents of the first buffer beind the foreground
     fboMain.begin();
     fboHueShift.draw(0, 0);
     foreground.draw(0, 0);
     fboMain.end();
     
-    //colorTest.setFromPixels( fbo.getTextureReference().getTextureData() );
-    ofImage fboImage;
-    
     ofPixels pixels;
     fboMain.readToPixels(pixels);
     
     colorTest.setFromPixels(pixels);
-    updateMorph(morphValue, colorTest);
     
-	ofBackground( 255, 255, 255);	//Set the background color
-	int w = gray1.width;
-	int h = gray1.height;
-
-	ofSetColor( 255, 255, 255 );
     ofPushMatrix();
     ofScale(-1.0, 1.0);
     ofTranslate(-ofGetWidth(), 0);
 
-	ofSetColor( 255, 255, 255 );
-    morph.draw( 0, 0);
+	updateMorph(morphValue, colorTest);
+	colorTest.draw(0, 0);
     ofPopMatrix();
     
     if(!bHide){
@@ -218,8 +196,7 @@ void ofApp::updateMorph( float morphValue, ofxCvColorImage& toMorph )
 	multiplyByScalar( bigMapY, 1.0 * H / h );
 	
 	//Do warping
-    morph = toMorph;	//Checkerboard image
-	morph.remap( bigMapX.getCvImage(), bigMapY.getCvImage() );
+	toMorph.remap( bigMapX.getCvImage(), bigMapY.getCvImage() );
 }
 
 //--------------------------------------------------------------
