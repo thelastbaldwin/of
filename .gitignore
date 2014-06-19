@@ -29,6 +29,12 @@ Makefile
 obj/
 *.exp
 *.opensdf
+*.dll
+*.exe
+*.lib
+*.pdb
+*.suo
+*.ilk
 
 #media assets
 *.mov

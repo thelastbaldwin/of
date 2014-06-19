@@ -80,7 +80,6 @@ public:
 	ofxCvFloatImage weight;
 
 	ofxCvColorImage morph;	//Resulted morphed image
-	int morphImageIndex;		//What to morph: 1 - first input image, 2 - checkerboard image
 
 	//Inverting the mapping (mapX, mapY), with antialiasing.
 	void inverseMapping( ofxCvFloatImage &mapX, ofxCvFloatImage &mapY );
