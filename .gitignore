@@ -13,7 +13,6 @@ scripts/
 libs/
 examples/
 emptyExample/
-bin/
 
 *.xcodeproj
 *.xcodeproj/
@@ -30,3 +29,10 @@ Makefile
 obj/
 *.exp
 *.opensdf
+
+#media assets
+*.mov
+*.mp4
+*.png
+*.gif
+*.jpg
