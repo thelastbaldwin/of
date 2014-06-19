@@ -79,7 +79,6 @@ public:
 	ofxCvFloatImage fx, fy;
 	ofxCvFloatImage weight;
 
-	float morphValue;	//[0, 1]
 	ofxCvColorImage morph;	//Resulted morphed image
 	int morphImageIndex;		//What to morph: 1 - first input image, 2 - checkerboard image
 
@@ -106,5 +105,8 @@ public:
     ofVideoGrabber  vidGrabber;
     int camWidth, camHeight;
     float DECIMATE_AMT;
+    ofxPanel gui;
+    ofxFloatSlider morphValue;
+    bool bHide;
 };
 
