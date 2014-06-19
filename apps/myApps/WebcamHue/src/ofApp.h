@@ -43,8 +43,8 @@ class ofApp : public ofBaseApp{
         //the number of hue shift variants to create
         const static int NUM_COLORS = 6;
     
-        const static int NUM_DOWN = 16;
-        const static int NUM_ACCROSS = 9;
+        const static int NUM_DOWN = 9;
+        const static int NUM_ACCROSS = 5;
     
         //turn this into an array of the number of variants
         ofTexture videoTexture[ofApp::NUM_COLORS];
