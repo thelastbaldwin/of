@@ -38,8 +38,7 @@ void ofApp::setup()
     colorTest.allocate(camWidth, camHeight);
     
     //Make morphing at first time
-    morphValue = 0;
-    morphImageIndex = 1;
+    morphImageIndex = 1; //unused?
     
     //Load checkerboard image
     foreground.loadImage("foreground.png");
@@ -52,6 +51,11 @@ void ofApp::setup()
     
     fboHueShift.allocate(ofGetWidth(), ofGetHeight(), GL_RGB);
     fboMain.allocate(ofGetWidth(), ofGetHeight(), GL_RGB);
+    
+    //gui stuff
+    gui.setup();
+    gui.add(morphValue.setup("morphValue", 0.50, 0.0, 0.95));
+    bHide = true;
 }
 
 //--------------------------------------------------------------
@@ -169,6 +173,10 @@ void ofApp::draw(){
 	ofSetColor( 255, 255, 255 );
     morph.draw( 0, 0);
     ofPopMatrix();
+    
+    if(!bHide){
+		gui.draw();
+	}
 }
 
 
@@ -350,11 +358,8 @@ void ofApp::inverseMapping( ofxCvFloatImage &mapX, ofxCvFloatImage &mapY ){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-	if ( key == '1' ) {		//Select first image to morph
-		morphImageIndex = 1;
-	}
-	if ( key == '2' ) {		//Select checkerboard image to morph
-		morphImageIndex = 2;
+	if( key == 'h' ){
+		bHide = !bHide;
 	}
 }
 
@@ -365,12 +370,11 @@ void ofApp::keyReleased(int key){
 
 //--------------------------------------------------------------
 void ofApp::mouseMoved(int x, int y ){
-	morphValue = ofMap( x, 0, ofGetWidth(), 0, 1 );
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
-	mouseMoved( x, y );
 }
 
 //--------------------------------------------------------------
