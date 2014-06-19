@@ -1,11 +1,16 @@
 #include "ofApp.h"
 #include "highgui.h"
 
+
 //--------------------------------------------------------------
 void ofApp::setup()
 {
-    camWidth = 480;
-    camHeight = 320;
+    //this needs to be a very small number. It determines what size image
+    //the optical flow is calculated from. Adversely affects performance very quickly.
+    DECIMATE_AMT = 0.2;
+    
+    camWidth = ofGetWidth();
+    camHeight = ofGetHeight();
     
     //we can now get back a list of devices.
 	vector<ofVideoDevice> devices = vidGrabber.listDevices();
@@ -26,8 +31,8 @@ void ofApp::setup()
     ofSetVerticalSync(true);
     
     //create idX, idy
-    idX.allocate( camWidth * 0.3, camHeight * 0.3 );
-    idY.allocate( camWidth * 0.3, camHeight * 0.3 );
+    idX.allocate( camWidth *   DECIMATE_AMT, camHeight * DECIMATE_AMT);
+    idY.allocate( camWidth *   DECIMATE_AMT, camHeight * DECIMATE_AMT);
     color1.allocate(camWidth, camHeight);
     colorTest.allocate(camWidth, camHeight);
     
@@ -36,7 +41,10 @@ void ofApp::setup()
     morphImageIndex = 1;
     
     //Load checkerboard image
-    imageTest.loadImage("checkerBoard_resize.png");
+    imageTest.loadImage("collage.png");
+    if(imageTest.getWidth() != ofGetWidth()){
+        imageTest.resize(ofGetWidth(), ofGetHeight());
+    }
 }
 
 //--------------------------------------------------------------
@@ -64,17 +72,16 @@ void ofApp::update(){
         
         color1.setFromPixels(vidGrabber.getPixelsRef());	//Convert to ofxCv images
         
-        float decimate = 0.3;              //TODO: make this a constant
         ofxCvColorImage imageDecimated1;
-        imageDecimated1.allocate( color1.width * decimate,
-                                 color1.height * decimate );
+        imageDecimated1.allocate( color1.width *  DECIMATE_AMT,
+                                 color1.height *  DECIMATE_AMT );
         //High-quality resize
         imageDecimated1.scaleIntoMe( color1, CV_INTER_AREA );
         gray1 = imageDecimated1;
         
         ofxCvColorImage imageDecimated2;
-        imageDecimated2.allocate( color2.width * decimate,
-                                 color2.height * decimate );
+        imageDecimated2.allocate( color2.width *  DECIMATE_AMT,
+                                 color2.height *  DECIMATE_AMT );
         //High-quality resize
         imageDecimated2.scaleIntoMe( color2, CV_INTER_AREA );
         gray2 = imageDecimated2;
@@ -130,37 +137,9 @@ void ofApp::draw(){
     ofScale(-1.0, 1.0);
     ofTranslate(-ofGetWidth(), 0);
 
-	//1. Input images + optical flow
-	ofPushMatrix();
-	ofTranslate( 10, 5 );
-	ofScale( 2, 2 );
-	color1.draw( 0, 0, w, h );
-	color2.draw( w+10, 0, w, h );
-
-	//Optical flow
-	float *flowXPixels = flowX.getPixelsAsFloats();
-	float *flowYPixels = flowY.getPixelsAsFloats();
-	ofSetColor( 0, 0, 255 );
-	for (int y=0; y<h; y+=10) {
-		for (int x=0; x<w; x+=5) {
-			float fx = flowXPixels[ x + w * y ];
-			float fy = flowYPixels[ x + w * y ];
-			//Draw only long vectors
-			if ( fabs( fx ) + fabs( fy ) > 0.3 ) {
-				ofRect( x-0.5, y-0.5, 1, 1 );
-				ofLine( x, y, x + fx, y + fy );
-			}
-		}
-	}
-	ofPopMatrix();
-
 	ofSetColor( 255, 255, 255 );
-	morph.draw( 10, 2*h + 15 );
+    morph.draw( 0, 0);
     ofPopMatrix();
-
-	//Output text with current morhping value
-	ofSetColor( 0, 0, 0 );
-	ofDrawBitmapString( "Morphing value: " + ofToString( morphValue * 100, 1 ) + "%", morph.getWidth() + 20, ofGetHeight() - 20 );
 }
 
 
@@ -211,7 +190,6 @@ void ofApp::updateMorph( float morphValue, int morphImageIndex )
 		morph = colorTest;	//Checkerboard image
 	}
 	morph.remap( bigMapX.getCvImage(), bigMapY.getCvImage() );
-
 }
 
 //--------------------------------------------------------------
