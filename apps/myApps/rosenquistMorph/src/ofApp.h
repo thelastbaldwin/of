@@ -87,7 +87,7 @@ public:
 	void inverseMapping( ofxCvFloatImage &mapX, ofxCvFloatImage &mapY );
 	
 	//Making image morphing
-	void updateMorph( float morphValue, int morphImageIndex );
+	void updateMorph( float morphValue, ofxCvColorImage& toMorph);
 
 	void keyPressed(int key);
 	void keyReleased(int key);
@@ -99,7 +99,10 @@ public:
 	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);
     
-    ofImage imageTest;
+    ofShader shader;
+    
+    ofFbo fboHueShift, fboMain;
+    ofImage foreground, background;
     ofVideoGrabber  vidGrabber;
     int camWidth, camHeight;
     float DECIMATE_AMT;

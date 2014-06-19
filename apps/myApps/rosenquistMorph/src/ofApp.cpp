@@ -5,9 +5,10 @@
 //--------------------------------------------------------------
 void ofApp::setup()
 {
+    shader.load("shader/shaderVert.c","shader/shaderFrag.c");
     //this needs to be a very small number. It determines what size image
     //the optical flow is calculated from. Adversely affects performance very quickly.
-    DECIMATE_AMT = 0.2;
+    DECIMATE_AMT = 0.05;
     
     camWidth = ofGetWidth();
     camHeight = ofGetHeight();
@@ -41,10 +42,16 @@ void ofApp::setup()
     morphImageIndex = 1;
     
     //Load checkerboard image
-    imageTest.loadImage("collage.png");
-    if(imageTest.getWidth() != ofGetWidth()){
-        imageTest.resize(ofGetWidth(), ofGetHeight());
+    foreground.loadImage("foreground.png");
+    background.loadImage("background.png");
+    
+    if(foreground.getWidth() != ofGetWidth()){
+        foreground.resize(ofGetWidth(), ofGetHeight());
+        background.resize(ofGetWidth(), ofGetHeight());
     }
+    
+    fboHueShift.allocate(ofGetWidth(), ofGetHeight(), GL_RGB);
+    fboMain.allocate(ofGetWidth(), ofGetHeight(), GL_RGB);
 }
 
 //--------------------------------------------------------------
@@ -62,7 +69,7 @@ void multiplyByScalar( ofxCvFloatImage &floatImage, float value )
 }
 
 //--------------------------------------------------------------
-void ofApp::update(){
+void ofApp::update(){    
     vidGrabber.update();
     if (vidGrabber.isFrameNew()){
         
@@ -120,14 +127,36 @@ void ofApp::update(){
                 idY.getPixelsAsFloats()[ x + w * y ] = y;
             }
         }
-        
-        colorTest.setFromPixels( imageTest );
-        updateMorph( morphValue, morphImageIndex );
     }
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    
+    float time = ofGetElapsedTimef();
+    //draw the machine image and apply the color shifting shader
+    fboHueShift.begin();
+    shader.begin();
+    background.getTextureReference().bind();
+    shader.setUniform1f("time", time);
+    background.draw(0, 0);
+    shader.end();
+    fboHueShift.end();
+    
+    fboMain.begin();
+    fboHueShift.draw(0, 0);
+    foreground.draw(0, 0);
+    fboMain.end();
+    
+    //colorTest.setFromPixels( fbo.getTextureReference().getTextureData() );
+    ofImage fboImage;
+    
+    ofPixels pixels;
+    fboMain.readToPixels(pixels);
+    
+    colorTest.setFromPixels(pixels);
+    updateMorph(morphValue, colorTest);
+    
 	ofBackground( 255, 255, 255);	//Set the background color
 	int w = gray1.width;
 	int h = gray1.height;
@@ -145,7 +174,7 @@ void ofApp::draw(){
 
 //--------------------------------------------------------------
 //Making image morphing
-void ofApp::updateMorph( float morphValue, int morphImageIndex )
+void ofApp::updateMorph( float morphValue, ofxCvColorImage& toMorph )
 {
 	mapX.allocate( w, h );			//w and h is size of gray1 image
 	mapY.allocate( w, h );
@@ -181,14 +210,7 @@ void ofApp::updateMorph( float morphValue, int morphImageIndex )
 	multiplyByScalar( bigMapY, 1.0 * H / h );
 	
 	//Do warping
-
-	//Select image to morph
-	if ( morphImageIndex == 1 ) {
-		morph = color1;		//First input image
-	}
-	else {
-		morph = colorTest;	//Checkerboard image
-	}
+    morph = toMorph;	//Checkerboard image
 	morph.remap( bigMapX.getCvImage(), bigMapY.getCvImage() );
 }
 
