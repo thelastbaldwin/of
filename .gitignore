@@ -42,3 +42,8 @@ obj/
 *.png
 *.gif
 *.jpg
+
+*_debug
+*.cbp
+*.layout
+*.workspace
