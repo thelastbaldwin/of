@@ -4,10 +4,10 @@
 void ofApp::setup(){
     camWidth = ofGetWidth();
     camHeight = ofGetHeight();
-    
+
     //we can now get back a list of devices.
 	vector<ofVideoDevice> devices = vidGrabber.listDevices();
-	
+
     for(int i = 0; i < devices.size(); i++){
 		cout << devices[i].id << ": " << devices[i].deviceName;
         if( devices[i].bAvailable ){
@@ -16,7 +16,7 @@ void ofApp::setup(){
             cout << " - unavailable " << endl;
         }
 	}
-    
+
     vidGrabber.setDeviceID(0);
 	vidGrabber.setDesiredFrameRate(60);
 	vidGrabber.initGrabber(camWidth,camHeight);
@@ -82,6 +82,6 @@ void ofApp::gotMessage(ofMessage msg){
 }
 
 //--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo){ 
+void ofApp::dragEvent(ofDragInfo dragInfo){
 
 }

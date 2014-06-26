@@ -23,14 +23,32 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    
     camTex.draw(0, 0);
     displayFramerate();
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
+    if(key == '1'){
+        changeId(0);
+    }
+    else if(key == '2'){
+        changeId(1);
+    }
+    else if(key == '3'){
+        changeId(2);
+    }
+}
 
+void ofApp::changeId(int id){
+    camThread.lock();
+    //can't change camera while running
+    camThread.vidGrabber.close();
+    camThread.vidGrabber.setDeviceID(id);
+    camThread.vidGrabber.setDesiredFrameRate(60);
+    //false tells us not to use gl textures
+    camThread.vidGrabber.initGrabber(ofGetWidth(),ofGetHeight(), false);
+    camThread.unlock();
 }
 
 //--------------------------------------------------------------
@@ -69,7 +87,7 @@ void ofApp::gotMessage(ofMessage msg){
 }
 
 //--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo){ 
+void ofApp::dragEvent(ofDragInfo dragInfo){
 
 }
 
