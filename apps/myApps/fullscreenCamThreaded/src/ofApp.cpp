@@ -4,6 +4,9 @@
 void ofApp::setup(){
     camThread.startThread(true, false);   // blocking, verbose
     camTex.allocate(ofGetWidth(), ofGetHeight(), GL_RGB);
+    camIndex = 0;
+    
+    
 }
 
 void ofApp::displayFramerate(){
@@ -24,19 +27,21 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     camTex.draw(0, 0);
+    ofSetColor(255, 0, 0);
+    ofRect(0, ofGetHeight()/2 - 2, ofGetWidth(), 4);
+    ofRect(ofGetWidth()/2 - 2, 0, 4, ofGetHeight());
     displayFramerate();
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-    if(key == '1'){
-        changeId(0);
+    if(key == OF_KEY_DOWN){
+        --camIndex;
+        changeId(camIndex);
     }
-    else if(key == '2'){
-        changeId(1);
-    }
-    else if(key == '3'){
-        changeId(2);
+    if(key == OF_KEY_UP){
+        ++camIndex;
+        changeId(camIndex);
     }
 }
 
