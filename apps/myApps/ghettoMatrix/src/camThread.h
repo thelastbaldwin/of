@@ -11,20 +11,20 @@
 
 class CamThread: public ofThread{
 public:
-    ofVideoGrabber 		vidGrabber;
-    int 				camWidth;
-    int 				camHeight;
+    std::vector<ofVideoGrabber> vidGrabbers;
     ofPixels         pixels;
 
-    CamThread(int id = 0){
-        camWidth = ofGetWidth();
-        camHeight = ofGetHeight();
-
+    CamThread(std::vector<int> & videoIds, int width, int height){
         //this might puke. try hard coded values or static constants from app
-        vidGrabber.setDeviceID(id);
-        vidGrabber.setDesiredFrameRate(60);
-        //false tells us not to use gl textures
-        vidGrabber.initGrabber(camWidth,camHeight, false);
+        
+        for (int i : videoIds){
+            ofVideoGrabber grabber;
+            grabber.setDeviceId(i);
+            grabber.setDesiredFrameRate(60);
+            grabber.initGrabber(width, height, false);
+            vidGrabbers.push_back(grabber);
+        
+        }
     }
 
     void threadedFunction(){

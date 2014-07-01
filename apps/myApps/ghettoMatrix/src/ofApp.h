@@ -37,5 +37,3 @@ class ofApp : public ofBaseApp{
 //        ofxXmlSettings XML;
 		
 };
-
-bool isFacetime(const ofVideoDevice& device);
