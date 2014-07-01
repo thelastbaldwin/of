@@ -72,7 +72,7 @@ void ofApp::mouseDragged(int x, int y, int button){
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
     ofxOscMessage m;
-	m.setAddress("/photo/transmit");
+	m.setAddress("/transmit/photo");
 	m.addStringArg("ohboy.gif");
 	sender.sendMessage(m);
 }

@@ -30,6 +30,8 @@ void ofApp::draw(){
     ofSetColor(255, 0, 0);
     ofRect(0, ofGetHeight()/2 - 2, ofGetWidth(), 4);
     ofRect(ofGetWidth()/2 - 2, 0, 4, ofGetHeight());
+    ofSetColor(255);
+    ofDrawBitmapString("CamIndex " + ofToString(camIndex), 5, ofGetHeight() - 5);
     displayFramerate();
 }
 
