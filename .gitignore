@@ -13,7 +13,7 @@ scripts/
 libs/
 examples/
 emptyExample/
-node-modules/
+node_modules/
 
 *.xcodeproj
 *.xcodeproj/
@@ -43,6 +43,8 @@ obj/
 *.png
 *.gif
 *.jpg
+*.jpeg
+*.wav
 
 *_debug
 *.cbp

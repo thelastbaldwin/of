@@ -22,11 +22,13 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+        void sendMessage(std::string filename, std::string id);
     
         void onGifSaved(string & fileName);
         void exit();
     
-        static const int PORT;
+        static const int SEND_PORT;
+        static const int RECEIVE_PORT;
         static const std::string HOST;
     
         ofxOscReceiver receiver;
