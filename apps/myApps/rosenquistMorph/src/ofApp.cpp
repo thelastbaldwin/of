@@ -53,6 +53,10 @@ void ofApp::setup()
     gui.setup();
     gui.add(morphValue.setup("morphValue", 0.50, 0.0, 0.95));
     bHide = true;
+    
+    //load logo
+    hashtag.loadImage("hashtag.png");
+    hashtag.resize(432, 46);
 }
 
 //--------------------------------------------------------------
@@ -155,6 +159,12 @@ void ofApp::draw(){
     if(!bHide){
 		gui.draw();
 	}
+    
+    ofSetColor(255, 255, 255, 200);
+    ofFill();
+    ofRect(ofGetWidth() - hashtag.width - 15, ofGetHeight() - hashtag.height - 15, hashtag.width + 15, hashtag.height + 15);
+    ofSetColor(255, 255, 255, 255);
+    hashtag.draw(ofGetWidth() - hashtag.width - 8, ofGetHeight() - hashtag.height - 8);
 }
 
 

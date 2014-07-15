@@ -3,7 +3,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     
-    borderSize = 5;
+    borderSize =20;
 
 	camWidth 		= ofGetWidth()/NUM_ACCROSS - borderSize;	// try to grab at this size.
 	camHeight 		= ofGetHeight()/NUM_DOWN - borderSize;
@@ -39,8 +39,14 @@ void ofApp::setup(){
     colorTriads[3] = colorTriad(ofColor::blue, ofColor::orange, ofColor::white);
     colorTriads[4] = colorTriad(ofColor::steelBlue, ofColor::cyan, ofColor::pink);
     colorTriads[5] = colorTriad(ofColor::black, ofColor::red, ofColor::white);
+    colorTriads[6] = colorTriad(ofColor::orchid, ofColor::paleGoldenRod, ofColor::paleGreen);
+    colorTriads[7] = colorTriad(ofColor::chartreuse, ofColor::chocolate, ofColor::coral);
 	
 	ofSetVerticalSync(true);
+    
+    //load logo
+    hashtag.loadImage("hashtag.png");
+    hashtag.resize(432, 46);
 }
 
 void polarizeColor(ofColor& original, const colorTriad& triad){
@@ -91,16 +97,23 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    ofPushMatrix();
     ofScale(-1.0, 1.0);
     ofTranslate(-ofGetWidth(), 0);
 	ofSetHexColor(0xffffff);
-    
-    //videoTexture contains inverted image
+
     for (int i = 0; i < NUM_ACCROSS; ++i) {
         for (int j = 0; j < NUM_DOWN; ++j) {
             videoTexture[(i + j) % NUM_COLORS].draw(i * (borderSize + camWidth) + borderSize/2, j* (borderSize + camHeight) + borderSize/2,camWidth,camHeight);
         }
     }
+    ofPopMatrix();
+
+    ofSetColor(255, 255, 255, 200);
+    ofFill();
+    ofRect(ofGetWidth() - hashtag.width - 15, ofGetHeight() - hashtag.height - 15, hashtag.width + 15, hashtag.height + 15);
+    ofSetColor(255, 255, 255, 255);
+    hashtag.draw(ofGetWidth() - hashtag.width - 8, ofGetHeight() - hashtag.height - 8);
 }
 
 
@@ -117,9 +130,9 @@ void ofApp::keyPressed  (int key){
 	// You'll need to compile with the 10.6 SDK for this
     // For Xcode 4.4 and greater, see this forum post on instructions on installing the SDK
     // http://forum.openframeworks.cc/index.php?topic=10343        
-	if (key == 's' || key == 'S'){
-		vidGrabber.videoSettings();
-	}
+//	if (key == 's' || key == 'S'){
+//		vidGrabber.videoSettings();
+//	}
 	
 	
 }
