@@ -46,7 +46,7 @@ void ofApp::setup(){
     
     //load logo
     hashtag.loadImage("hashtag.png");
-    hashtag.resize(432, 46);
+    hashtag.resize(hashtag.width/3, hashtag.height/3);
 }
 
 void polarizeColor(ofColor& original, const colorTriad& triad){
