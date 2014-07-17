@@ -17,9 +17,14 @@ void ofApp::setup(){
     //    auto func = [](){return false};
     for (auto device: devices){
         if(device.bAvailable){
-            cout << device.deviceName << endl;
+            cout << device.id << " : " << device.deviceName << endl;
         }
     }
+    
+    std::vector<int> mainCameraIds;
+    mainCameraIds.push_back(0);
+    hMainCameraThread = new CamThread(mainCameraIds, 1024, 768);
+    hMainCameraThread->startThread();
 
 }
 
@@ -119,5 +124,7 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 }
 
 void ofApp::exit(){
+    hMainCameraThread->stopThread();
+    delete hMainCameraThread;
     gifEncoder.exit();
 }

@@ -22,7 +22,8 @@ public:
             ofVideoGrabber grabber;
             grabber.setDeviceID(i);
             //at 30fps, will use significantly less bandwidth
-            grabber.setDesiredFrameRate(60);
+            //at least on the mac, can't set framerate
+            //grabber.setDesiredFrameRate(60);
             //the false tells the grabber not to use GL textures
             grabber.initGrabber(width, height, false);
             vidGrabbers.push_back(grabber);
@@ -31,7 +32,6 @@ public:
     }
 
     void threadedFunction(){
-
         while( isThreadRunning() != 0 ){
             for (int i = 0; i < vidGrabbers.size(); ++i){
                 vidGrabbers[i].update();

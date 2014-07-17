@@ -38,5 +38,7 @@ class ofApp : public ofBaseApp{
         ofVideoGrabber 		vidGrabber;
         ofxGifEncoder gifEncoder;
 //        ofxXmlSettings XML;
+    
+        CamThread* hMainCameraThread;
 		
 };
