@@ -5,10 +5,6 @@ const int ofApp::SEND_PORT = 12346;
 const int ofApp::RECEIVE_PORT = 12345;
 const std::string ofApp::HOST = "localhost";
 
-bool isFacetime(const ofVideoDevice& device){
-    return device.deviceName == "FaceTime HD Camera";
-}
-
 
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -19,8 +15,11 @@ void ofApp::setup(){
     //    lambdas will be supported in oF 0.9, but not now
     //    https://github.com/openframeworks/openFrameworks/issues/2335
     //    auto func = [](){return false};
-    auto it = std::find_if(devices.begin(), devices.end(), isFacetime);
-    devices.erase(it);
+    for (auto device: devices){
+        if(device.bAvailable){
+            cout << device.deviceName << endl;
+        }
+    }
 
 }
 

@@ -4,6 +4,7 @@
 #include "ofMain.h"
 #include "ofxOsc.h"
 #include "ofxGifEncoder.h"
+#include "camThread.h"
 //#include "ofxXmlSettings.h"
 
 class ofApp : public ofBaseApp{
