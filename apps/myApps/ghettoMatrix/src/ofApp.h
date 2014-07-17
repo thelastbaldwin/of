@@ -24,6 +24,7 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
         void sendMessage(std::string filename, std::string id);
+        void takeTraditionalPhoto();
     
         void onGifSaved(string & fileName);
         void exit();
@@ -40,5 +41,8 @@ class ofApp : public ofBaseApp{
 //        ofxXmlSettings XML;
     
         CamThread* hMainCameraThread;
+    
+        ofSoundPlayer beep;
+        ofSoundPlayer yeah;
 		
 };

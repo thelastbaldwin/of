@@ -45,6 +45,7 @@ obj/
 *.jpg
 *.jpeg
 *.wav
+*.mp3
 
 *_debug
 *.cbp

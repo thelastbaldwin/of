@@ -25,7 +25,11 @@ void ofApp::setup(){
     mainCameraIds.push_back(0);
     hMainCameraThread = new CamThread(mainCameraIds, 1024, 768);
     hMainCameraThread->startThread();
-
+    
+    beep.loadSound("short_beep.wav");
+    beep.setMultiPlay(false);
+    yeah.loadSound("short_yeah.mp3");
+    yeah.setMultiPlay(false);
 }
 
 //--------------------------------------------------------------
@@ -70,8 +74,60 @@ void ofApp::onGifSaved(string &fileName) {
     cout << "gif saved as " << fileName << endl;
 }
 
+void ofApp::takeTraditionalPhoto(){
+    //set up stage
+    ofFbo fbo;
+    fbo.allocate(1024 * 2, 768 * 2, GL_RGB);
+    
+    fbo.begin();
+    //repeat 4 times
+    for(int i = 0; i < 4; ++i){
+        //wait 3 seconds
+        beep.play();
+        ofSleepMillis(1300);
+        yeah.play();
+        //lock the thread
+        hMainCameraThread->lock();
+        //get the pixels
+        ofPixels currentFramePixels = hMainCameraThread->pixels[0];
+        ofImage currentFrame;
+        currentFrame.getPixelsRef() = currentFramePixels;
+        currentFrame.reloadTexture();
+        hMainCameraThread->unlock();
+        //draw to fbo in correct quadrant
+        switch(i){
+            case 0:
+                currentFrame.draw(0, 0);
+                break;
+            case 1:
+                currentFrame.draw(1024, 0);
+                break;
+            case 2:
+                currentFrame.draw(0, 768);
+                break;
+            case 3:
+                currentFrame.draw(1024, 768);
+                break;
+        }
+        ofSleepMillis(800);
+    }
+    fbo.end();
+    
+    //save the image in the fbo
+    ofImage finalImage;
+    finalImage.allocate(1024 * 2, 768 * 2, OF_IMAGE_COLOR);
+    fbo.readToPixels(finalImage.getPixelsRef());
+    finalImage.reloadTexture();
+    
+    finalImage.saveImage("test.jpg");
+}
+
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
+    if(key == ' '){
+        cout << "space pressed" << endl;
+        takeTraditionalPhoto();
+    }
 
 }
 
