@@ -78,6 +78,8 @@ void ofApp::takeTraditionalPhoto(){
     //set up stage
     ofFbo fbo;
     fbo.allocate(1024 * 2, 768 * 2, GL_RGB);
+    ofImage currentFrame;
+    currentFrame.allocate(1024, 768, OF_IMAGE_COLOR);
     
     fbo.begin();
     //repeat 4 times
@@ -86,14 +88,10 @@ void ofApp::takeTraditionalPhoto(){
         beep.play();
         ofSleepMillis(1300);
         yeah.play();
-        //lock the thread
         hMainCameraThread->lock();
-        //get the pixels
-        ofPixels currentFramePixels = hMainCameraThread->pixels[0];
-        ofImage currentFrame;
-        currentFrame.getPixelsRef() = currentFramePixels;
-        currentFrame.reloadTexture();
+        currentFrame.getPixelsRef() = hMainCameraThread->pixels[0];
         hMainCameraThread->unlock();
+        currentFrame.reloadTexture();
         //draw to fbo in correct quadrant
         switch(i){
             case 0:

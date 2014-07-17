@@ -32,7 +32,7 @@ public:
     }
 
     void threadedFunction(){
-        while( isThreadRunning() != 0 ){
+        while( isThreadRunning()){
             for (int i = 0; i < vidGrabbers.size(); ++i){
                 vidGrabbers[i].update();
                 if(vidGrabbers[i].isFrameNew()){
