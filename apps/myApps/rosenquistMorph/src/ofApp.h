@@ -107,5 +107,7 @@ public:
     ofxPanel gui;
     ofxFloatSlider morphValue;
     bool bHide;
+    
+    ofImage hashtag;
 };
 

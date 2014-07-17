@@ -41,10 +41,10 @@ class ofApp : public ofBaseApp{
 		unsigned char * 	framePixels;
     
         //the number of hue shift variants to create
-        const static int NUM_COLORS = 6;
+        const static int NUM_COLORS = 8;
     
-        const static int NUM_DOWN = 9;
-        const static int NUM_ACCROSS = 5;
+        const static int NUM_DOWN = 5;
+        const static int NUM_ACCROSS = 3;
     
         //turn this into an array of the number of variants
         ofTexture videoTexture[ofApp::NUM_COLORS];
@@ -53,4 +53,6 @@ class ofApp : public ofBaseApp{
         int camWidth;
         int camHeight;
         int borderSize;
+    
+        ofImage hashtag;
 };
