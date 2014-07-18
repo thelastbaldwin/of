@@ -24,7 +24,7 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
         void sendMessage(std::string filename, std::string id);
-        void takeTraditionalPhoto();
+        std::string takeTraditionalPhoto(const string &fileName);
     
         void onGifSaved(string & fileName);
         void exit();

@@ -56,7 +56,8 @@ void ofApp::update(){
                 //compose into framebuffer object
                 //drop a sweet logo on the bottom
                 //profit
-                sendMessage("cat.jpeg", id);
+                std::string fileName = takeTraditionalPhoto("traditional - " + ofGetTimestampString("%m%d%Y-%H%M%s") + ".jpg");
+                sendMessage(fileName, id);
             }
 			
 		}else{
@@ -74,7 +75,7 @@ void ofApp::onGifSaved(string &fileName) {
     cout << "gif saved as " << fileName << endl;
 }
 
-void ofApp::takeTraditionalPhoto(){
+std::string ofApp::takeTraditionalPhoto(const string &fileName){
     //set up stage
     ofFbo fbo;
     fbo.allocate(1024 * 2, 768 * 2, GL_RGB);
@@ -117,14 +118,17 @@ void ofApp::takeTraditionalPhoto(){
     fbo.readToPixels(finalImage.getPixelsRef());
     finalImage.reloadTexture();
     
-    finalImage.saveImage("test.jpg");
+    finalImage.saveImage(fileName);
+    
+    return fileName;
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
+    //just for testing, but might be useful for MANUAL OVERRIDE
     if(key == ' '){
         cout << "space pressed" << endl;
-        takeTraditionalPhoto();
+        takeTraditionalPhoto("traditional - " + ofGetTimestampString("%m%d%Y-%H%M%s") + ".jpg");
     }
 
 }
