@@ -36,6 +36,7 @@ obj/
 *.pdb
 *.suo
 *.ilk
+*.h~
 
 #media assets
 *.mov

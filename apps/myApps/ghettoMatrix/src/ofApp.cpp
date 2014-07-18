@@ -10,25 +10,26 @@ const std::string ofApp::HOST = "localhost";
 void ofApp::setup(){
     sender.setup(HOST, SEND_PORT);
     receiver.setup(RECEIVE_PORT);
-    
+
     vector<ofVideoDevice> devices = vidGrabber.listDevices();
     //    lambdas will be supported in oF 0.9, but not now
     //    https://github.com/openframeworks/openFrameworks/issues/2335
     //    auto func = [](){return false};
-    for (auto device: devices){
-        if(device.bAvailable){
-            cout << device.id << " : " << device.deviceName << endl;
+    //for (ofVideoDevice device: devices){
+    for(int i = 0; i < devices.size(); ++i){
+        if(devices[i].bAvailable){
+            cout << devices[i].id << " : " << devices[i].deviceName << endl;
         }
     }
-    
+
     std::vector<int> mainCameraIds;
     mainCameraIds.push_back(0);
     hMainCameraThread = new CamThread(mainCameraIds, 1024, 768);
     hMainCameraThread->startThread();
-    
+
     beep.loadSound("short_beep.wav");
     beep.setMultiPlay(false);
-    yeah.loadSound("short_yeah.mp3");
+    yeah.loadSound("short_yeah.ogg");
     yeah.setMultiPlay(false);
 }
 
@@ -38,12 +39,12 @@ void ofApp::update(){
         // get the next message
 		ofxOscMessage m;
 		receiver.getNextMessage(&m);
-        
+
         if(m.getAddress() == "/take/picture"){
             std::string type = m.getArgAsString(0);
             std::string id = m.getArgAsString(1);
-            
-            
+
+
             if(type == "matrix"){
                 cout << "matrix requested" << endl;
                 //get all the camera pictures
@@ -59,7 +60,7 @@ void ofApp::update(){
                 std::string fileName = takeTraditionalPhoto("traditional - " + ofGetTimestampString("%m%d%Y-%H%M%s") + ".jpg");
                 sendMessage(fileName, id);
             }
-			
+
 		}else{
             std::cout << m.getAddress();
         }
@@ -81,7 +82,7 @@ std::string ofApp::takeTraditionalPhoto(const string &fileName){
     fbo.allocate(1024 * 2, 768 * 2, GL_RGB);
     ofImage currentFrame;
     currentFrame.allocate(1024, 768, OF_IMAGE_COLOR);
-    
+
     fbo.begin();
     //repeat 4 times
     for(int i = 0; i < 4; ++i){
@@ -111,15 +112,13 @@ std::string ofApp::takeTraditionalPhoto(const string &fileName){
         ofSleepMillis(800);
     }
     fbo.end();
-    
+
     //save the image in the fbo
     ofImage finalImage;
     finalImage.allocate(1024 * 2, 768 * 2, OF_IMAGE_COLOR);
     fbo.readToPixels(finalImage.getPixelsRef());
     finalImage.reloadTexture();
-    
     finalImage.saveImage(fileName);
-    
     return fileName;
 }
 
@@ -150,7 +149,7 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-    
+
 }
 
 //--------------------------------------------------------------
@@ -177,7 +176,7 @@ void ofApp::sendMessage(std::string filename, std::string id){
 }
 
 //--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo){ 
+void ofApp::dragEvent(ofDragInfo dragInfo){
 
 }
 

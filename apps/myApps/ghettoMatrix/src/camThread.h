@@ -17,17 +17,17 @@ public:
     CamThread(std::vector<int> & videoIds, int width, int height){
         //make sure that we only hold as many pixels as we have cameras
         pixels.resize(videoIds.size());
-        
-        for (int i : videoIds){
+
+        for (int i = 0; i < videoIds.size(); ++i){
             ofVideoGrabber grabber;
-            grabber.setDeviceID(i);
+            grabber.setDeviceID(videoIds[i]);
             //at 30fps, will use significantly less bandwidth
             //at least on the mac, can't set framerate
             //grabber.setDesiredFrameRate(60);
             //the false tells the grabber not to use GL textures
             grabber.initGrabber(width, height, false);
             vidGrabbers.push_back(grabber);
-        
+
         }
     }
 
