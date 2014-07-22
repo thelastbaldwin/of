@@ -97,6 +97,7 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    ofHideCursor();
     ofPushMatrix();
     ofScale(-1.0, 1.0);
     ofTranslate(-ofGetWidth(), 0);

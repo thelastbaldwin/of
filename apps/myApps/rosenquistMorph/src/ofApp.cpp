@@ -126,7 +126,7 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    
+    ofHideCursor();
     float time = ofGetElapsedTimef();
     //draw the machine image and apply the color shifting shader
     fboHueShift.begin();
@@ -158,6 +158,7 @@ void ofApp::draw(){
     
     if(!bHide){
 		gui.draw();
+        ofShowCursor();
 	}
     
     ofSetColor(255, 255, 255, 200);

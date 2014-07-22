@@ -83,6 +83,7 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    ofHideCursor();
     fbo.begin();
     shader.begin();
     waves.getTextureReference().bind();
@@ -105,6 +106,7 @@ void ofApp::draw(){
     ofPopMatrix();
     
     if(bHide){
+        ofShowCursor();
 		gui.draw();
 	}
 }
