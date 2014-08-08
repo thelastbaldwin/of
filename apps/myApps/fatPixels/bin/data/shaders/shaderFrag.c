@@ -7,10 +7,7 @@ out vec4 outputColor;
 
 // would need to be passed from geometry shader
 // in vec2 texCoordVarying;
-in VertexData {
-    vec2 texCoord;
-    vec4 color;
-} Vertex;
+in vec4 color;
 
 //the origin for the gl_FragCoord by default starts in the lower left
 //this sets it to the upper left
@@ -26,8 +23,8 @@ void main()
 
     //outputs the color of the texture at the updated position
     //outputColor = texture(texture0, pos);
-    outputColor = Vertex.color;
+    //outputColor = color;
     
     //output black
-    //outputColor = vec4(0.0, 0.0, 0.0, 1.0);
+    outputColor = vec4(0.0, 0.0, 0.0, 1.0);
 }

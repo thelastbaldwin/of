@@ -21,7 +21,6 @@ class ofApp : public ofBaseApp{
         ofShader shader;
     
         ofVideoGrabber vidGrabber;
-        //turn this into an array
-        ofPlanePrimitive plane;
         ofMesh mesh;
+    ofCamera cam;
 };

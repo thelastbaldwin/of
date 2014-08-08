@@ -16,8 +16,14 @@ void ofApp::setup(){
     for(int i = 0; i < ofGetHeight(); ++i){
         for(int j = 0; j < ofGetWidth(); ++j){
             mesh.addVertex(ofPoint(j, i, 0));
+            mesh.addTexCoord(ofPoint(j, i, 0));
         }
     }
+    
+    cam.setPosition(ofGetWidth()/2, ofGetHeight()/2, -120);
+    cam.lookAt(ofVec3f(ofGetWidth()/2, ofGetHeight()/2, 0));
+    cam.setFov(60);
+    cam.setVFlip(true);
 }
 
 //--------------------------------------------------------------
@@ -27,19 +33,18 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    //ofEnableDepthTest();
-    //same as getTextureReference.draw();
-    //vidGrabber.draw(0, 0);
     vidGrabber.getTextureReference().bind();
+    cam.begin();
     shader.begin();
     
     //shader.setUniform1f("time", ofGetElapsedTimef());
     
-    mesh.draw();
-    //plane.drawWireframe();
+    mesh.drawWireframe();
+//    mesh.draw();
     
     shader.end();
     vidGrabber.getTextureReference().unbind();
+    cam.end();
 }
 
 //--------------------------------------------------------------

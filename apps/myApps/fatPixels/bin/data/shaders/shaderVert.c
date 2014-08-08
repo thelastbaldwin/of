@@ -32,5 +32,6 @@ void main(){
     // gl_Position = modelViewProjectionMatrix * modifiedPosition;
     // gl_Position = gl_Vertex;
     // pass the unmolested vertex to the geometry shader
-    gl_Position = position;
+    gl_Position = modifiedPosition;
+    //gl_PointSize = modifiedPosition.z;
 }
