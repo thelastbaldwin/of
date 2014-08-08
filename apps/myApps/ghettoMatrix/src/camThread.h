@@ -23,7 +23,7 @@ public:
             grabber.setDeviceID(videoIds[i]);
             //at 30fps, will use significantly less bandwidth
             //at least on the mac, can't set framerate
-            //grabber.setDesiredFrameRate(60);
+            grabber.setDesiredFrameRate(30);
             //the false tells the grabber not to use GL textures
             grabber.initGrabber(width, height, false);
             vidGrabbers.push_back(grabber);
