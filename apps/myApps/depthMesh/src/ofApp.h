@@ -23,5 +23,4 @@ class ofApp : public ofBaseApp{
         ofVideoGrabber vidGrabber;
         //turn this into an array
         ofPlanePrimitive plane;
-        ofMesh mesh;
 };

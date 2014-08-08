@@ -3,26 +3,21 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     //shader loading
-    shader.load("shaders/shaderVert.c", "shaders/shaderFrag.c", "shaders/shaderGeometry.c");
-    shader.setGeometryInputType(GL_POINTS);
-    //this will be a GL_TRIANGLE_STRIP
-    shader.setGeometryOutputType(GL_POINTS);
-    shader.setGeometryOutputCount(ofGetWidth() * ofGetHeight());
+    shader.load("shaders/shaderVert.c", "shaders/shaderFrag.c");
     
     vidGrabber.setDeviceID(0);
     vidGrabber.initGrabber(640, 480, true);
-    mesh.setMode(OF_PRIMITIVE_POINTS);
+    plane.set(ofGetWidth(), ofGetHeight());
+    plane.setPosition(plane.getWidth()/2, plane.getHeight()/2, 100);
+    plane.setResolution(ofGetWidth()/4, ofGetHeight()/4);
     
-    for(int i = 0; i < ofGetHeight(); ++i){
-        for(int j = 0; j < ofGetWidth(); ++j){
-            mesh.addVertex(ofPoint(j, i, 0));
-        }
-    }
+    plane.mapTexCoordsFromTexture(vidGrabber.getTextureReference());
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
     vidGrabber.update();
+    plane.mapTexCoordsFromTexture(vidGrabber.getTextureReference());
 }
 
 //--------------------------------------------------------------
@@ -33,10 +28,10 @@ void ofApp::draw(){
     vidGrabber.getTextureReference().bind();
     shader.begin();
     
-    //shader.setUniform1f("time", ofGetElapsedTimef());
+    shader.setUniform1f("time", ofGetElapsedTimef());
     
-    mesh.draw();
-    //plane.drawWireframe();
+    //plane.draw();
+    plane.drawWireframe();
     
     shader.end();
     vidGrabber.getTextureReference().unbind();
