@@ -14,8 +14,10 @@ libs/
 examples/
 emptyExample/
 node_modules/
-bin/
-!bin/data
+
+bin/*
+!bin/data/
+
 
 *.xcodeproj
 *.xcodeproj/
