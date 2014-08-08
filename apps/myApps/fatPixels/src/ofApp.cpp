@@ -23,10 +23,10 @@ void ofApp::setup(){
         }
     }
     
-//    cam.setPosition(ofGetWidth()/2, ofGetHeight()/2, -200);
-//    cam.lookAt(ofVec3f(ofGetWidth()/2, ofGetHeight()/2, 0));
-//    cam.setFov(60);
-//    cam.setVFlip(true);
+    cam.setPosition(ofGetWidth()/2, ofGetHeight()/2, -180);
+    cam.lookAt(ofVec3f(ofGetWidth()/2, ofGetHeight()/2, 0));
+    cam.setFov(60);
+    cam.setVFlip(true);
 }
 
 //--------------------------------------------------------------
@@ -36,8 +36,12 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    ofPushMatrix();
+    ofScale(-1.0, 1.0);
+    ofTranslate(-ofGetWidth(), 0);
+    
     vidGrabber.getTextureReference().bind();
-//    cam.begin();
+    cam.begin();
     shader.begin();
     
     //shader.setUniform1f("time", ofGetElapsedTimef());
@@ -47,7 +51,8 @@ void ofApp::draw(){
     
     shader.end();
     vidGrabber.getTextureReference().unbind();
-//    cam.end();
+    cam.end();
+    ofPopMatrix();
 }
 
 //--------------------------------------------------------------
