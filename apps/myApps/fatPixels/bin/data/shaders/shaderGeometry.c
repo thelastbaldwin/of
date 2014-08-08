@@ -17,7 +17,7 @@ out vec4 color;
 
 void main(){
 	color = VertexIn[0].color;
-	float squareSize = 16.0;
+	float squareSize = 4.0;
 
 	//want to replace this vertex with a quad
 	vec4 newPos;

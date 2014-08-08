@@ -2,7 +2,7 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    int divisionFactor = 8;
+    int divisionFactor = 4;
     
     //shader loading
     shader.load("shaders/shaderVert.c", "shaders/shaderFrag.c", "shaders/shaderGeometry.c");
@@ -36,12 +36,15 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    ofBackground(0, 0, 0);
+    
     ofPushMatrix();
     ofScale(-1.0, 1.0);
     ofTranslate(-ofGetWidth(), 0);
     
-    vidGrabber.getTextureReference().bind();
     cam.begin();
+    
+    vidGrabber.getTextureReference().bind();
     shader.begin();
     
     //shader.setUniform1f("time", ofGetElapsedTimef());
