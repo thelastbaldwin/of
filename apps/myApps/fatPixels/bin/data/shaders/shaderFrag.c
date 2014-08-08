@@ -23,8 +23,8 @@ void main()
 
     //outputs the color of the texture at the updated position
     //outputColor = texture(texture0, pos);
-    //outputColor = color;
+    outputColor = color;
     
     //output black
-    outputColor = vec4(0.0, 0.0, 0.0, 1.0);
+    //outputColor = vec4(0.0, 0.0, 0.0, 1.0);
 }

@@ -2,28 +2,31 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    int divisionFactor = 8;
+    
     //shader loading
     shader.load("shaders/shaderVert.c", "shaders/shaderFrag.c", "shaders/shaderGeometry.c");
     shader.setGeometryInputType(GL_POINTS);
     //this will be a GL_TRIANGLE_STRIP
-    shader.setGeometryOutputType(GL_POINTS);
-    shader.setGeometryOutputCount(ofGetWidth() * ofGetHeight());
+    shader.setGeometryOutputType(GL_TRIANGLE_STRIP);
+    shader.setGeometryOutputCount(ofGetWidth() * ofGetHeight()/divisionFactor * 4);
     
     vidGrabber.setDeviceID(0);
     vidGrabber.initGrabber(640, 480, true);
     mesh.setMode(OF_PRIMITIVE_POINTS);
     
-    for(int i = 0; i < ofGetHeight(); ++i){
-        for(int j = 0; j < ofGetWidth(); ++j){
+    
+    for(int i = 0; i < ofGetHeight(); i+=divisionFactor){
+        for(int j = 0; j < ofGetWidth(); j+=divisionFactor){
             mesh.addVertex(ofPoint(j, i, 0));
             mesh.addTexCoord(ofPoint(j, i, 0));
         }
     }
     
-    cam.setPosition(ofGetWidth()/2, ofGetHeight()/2, -120);
-    cam.lookAt(ofVec3f(ofGetWidth()/2, ofGetHeight()/2, 0));
-    cam.setFov(60);
-    cam.setVFlip(true);
+//    cam.setPosition(ofGetWidth()/2, ofGetHeight()/2, -200);
+//    cam.lookAt(ofVec3f(ofGetWidth()/2, ofGetHeight()/2, 0));
+//    cam.setFov(60);
+//    cam.setVFlip(true);
 }
 
 //--------------------------------------------------------------
@@ -34,17 +37,17 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     vidGrabber.getTextureReference().bind();
-    cam.begin();
+//    cam.begin();
     shader.begin();
     
     //shader.setUniform1f("time", ofGetElapsedTimef());
     
-    mesh.drawWireframe();
-//    mesh.draw();
+//    mesh.drawWireframe();
+    mesh.draw();
     
     shader.end();
     vidGrabber.getTextureReference().unbind();
-    cam.end();
+//    cam.end();
 }
 
 //--------------------------------------------------------------
