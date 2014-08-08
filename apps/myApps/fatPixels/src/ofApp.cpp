@@ -11,7 +11,7 @@ void ofApp::setup(){
     plane.setPosition(plane.getWidth()/2, plane.getHeight()/2, 100);
     plane.setResolution(ofGetWidth()/4, ofGetHeight()/4);
     
-    plane.mapTexCoordsFromTexture(vidGrabber.getTextureReference());
+    //plane.mapTexCoordsFromTexture(vidGrabber.getTextureReference());
 }
 
 //--------------------------------------------------------------
@@ -30,8 +30,8 @@ void ofApp::draw(){
     
     shader.setUniform1f("time", ofGetElapsedTimef());
     
-    //plane.draw();
-    plane.drawWireframe();
+    plane.draw();
+    //plane.drawWireframe();
     
     shader.end();
     vidGrabber.getTextureReference().unbind();

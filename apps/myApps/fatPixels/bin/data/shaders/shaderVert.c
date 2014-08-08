@@ -18,11 +18,9 @@ void main(){
 
     //not strictly based on brightness, just one channel
     float displacementZ = texture(texture0, texcoord).r;
-    // float displacementX = sin(time) * position.x;
 
-    modifiedPosition.z -= displacementZ * scale;
-    //modifiedPosition.z -= texcoord.x * scale;
-    // modifiedPosition.x *= displacementX;
+    modifiedPosition.z += displacementZ * scale;
 
     gl_Position = modelViewProjectionMatrix * modifiedPosition;
+    texCoordVarying = vec2(modifiedPosition.x + texcoord.x, modifiedPosition.y + texcoord.y);
 }
