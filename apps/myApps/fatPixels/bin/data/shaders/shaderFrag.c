@@ -2,7 +2,7 @@
 #version 410
 
 //get this one for free by calling bind on a texture
-uniform sampler2DRect texture;
+uniform sampler2DRect texture0;
 out vec4 outputColor;
 
 //the origin for the gl_FragCoord by default starts in the lower left
@@ -15,5 +15,6 @@ void main()
     vec2 pos = vec2(gl_FragCoord.x, gl_FragCoord.y);
 
     //outputs the color of the texture at the current position
-    outputColor = texture(texture, pos);
+    // outputColor = texture(texture0, pos);
+    outputColor = vec4(0.0, 0.0, 0.0, 1.0);
 }
