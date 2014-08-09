@@ -2,60 +2,39 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    int divisionFactor = 8;
-    
     //shader loading
-    shader.load("shaders/shaderVert.c", "shaders/shaderFrag.c", "shaders/shaderGeometry.c");
-    shader.setGeometryInputType(GL_POINTS);
-    //this will be a GL_TRIANGLE_STRIP
-    shader.setGeometryOutputType(GL_TRIANGLE_STRIP);
-    shader.setGeometryOutputCount(ofGetWidth() * ofGetHeight()/divisionFactor * 4);
+    shader.load("shaders/shaderVert.c", "shaders/shaderFrag.c");
     
     vidGrabber.setDeviceID(0);
-    vidGrabber.initGrabber(1024, 768, true);
-    mesh.setMode(OF_PRIMITIVE_POINTS);
+    vidGrabber.initGrabber(640, 480, true);
+    plane.set(ofGetWidth(), ofGetHeight());
+    plane.setPosition(plane.getWidth()/2, plane.getHeight()/2, 100);
+    plane.setResolution(ofGetWidth()/4, ofGetHeight()/4);
     
-    
-    for(int i = 0; i < ofGetHeight(); i+=divisionFactor){
-        for(int j = 0; j < ofGetWidth(); j+=divisionFactor){
-            mesh.addVertex(ofPoint(j, i, 0));
-            mesh.addTexCoord(ofPoint(j, i, 0));
-        }
-    }
-    
-    cam.setPosition(ofGetWidth()/2, ofGetHeight()/2, -180);
-    cam.lookAt(ofVec3f(ofGetWidth()/2, ofGetHeight()/2, 0));
-    cam.setFov(60);
-    cam.setVFlip(true);
+    plane.mapTexCoordsFromTexture(vidGrabber.getTextureReference());
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
     vidGrabber.update();
+    plane.mapTexCoordsFromTexture(vidGrabber.getTextureReference());
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    ofBackground(0, 0, 0);
-    
-    ofPushMatrix();
-    ofScale(-1.0, 1.0);
-    ofTranslate(-ofGetWidth(), 0);
-    
-    cam.begin();
-    
+    //ofEnableDepthTest();
+    //same as getTextureReference.draw();
+    //vidGrabber.draw(0, 0);
     vidGrabber.getTextureReference().bind();
     shader.begin();
     
-    //shader.setUniform1f("time", ofGetElapsedTimef());
+    shader.setUniform1f("time", ofGetElapsedTimef());
     
-//    mesh.drawWireframe();
-    mesh.draw();
+    //plane.draw();
+    plane.drawWireframe();
     
     shader.end();
     vidGrabber.getTextureReference().unbind();
-    cam.end();
-    ofPopMatrix();
 }
 
 //--------------------------------------------------------------

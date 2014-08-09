@@ -15,6 +15,10 @@ examples/
 emptyExample/
 node_modules/
 
+bin/*
+!bin/data/
+
+
 *.xcodeproj
 *.xcodeproj/
 *.make
@@ -47,6 +51,7 @@ obj/
 *.jpeg
 *.wav
 *.mp3
+*.ogg
 
 *_debug
 *.cbp
