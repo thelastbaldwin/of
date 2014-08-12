@@ -12,7 +12,7 @@ void ofApp::setup(){
     shader.setGeometryOutputCount(ofGetWidth() * ofGetHeight()/divisionFactor * 4);
     
     vidGrabber.setDeviceID(0);
-    vidGrabber.initGrabber(1024, 768, true);
+    vidGrabber.initGrabber(640, 480, true);
     mesh.setMode(OF_PRIMITIVE_POINTS);
     
     
@@ -23,7 +23,16 @@ void ofApp::setup(){
         }
     }
     
-    cam.setPosition(ofGetWidth()/2, ofGetHeight()/2, -180);
+    //gui
+    gui.setup();
+    gui.add(squareSize.setup("square size", 8.0, 0.5, 16.0));
+    gui.add(cameraX.setup("cameraX", ofGetWidth()/2, -ofGetWidth()/2, ofGetWidth()));
+    gui.add(cameraY.setup("cameraY", ofGetHeight()/2, -ofGetHeight()/2, ofGetHeight()));
+    gui.add(cameraZ.setup("cameraZ", -200, -100, -500));
+    
+    bHide = true;
+    
+    cam.setPosition(ofGetWidth()/2, ofGetHeight()/2, cameraZ);
     cam.lookAt(ofVec3f(ofGetWidth()/2, ofGetHeight()/2, 0));
     cam.setFov(60);
     cam.setVFlip(true);
@@ -43,11 +52,13 @@ void ofApp::draw(){
     ofTranslate(-ofGetWidth(), 0);
     
     cam.begin();
+    cam.setPosition(cameraX, cameraY, cameraZ);
+    cam.lookAt(ofVec3f(ofGetWidth()/2, ofGetHeight()/2, 0));
     
     vidGrabber.getTextureReference().bind();
     shader.begin();
     
-    //shader.setUniform1f("time", ofGetElapsedTimef());
+    shader.setUniform1f("squareSize", squareSize);
     
 //    mesh.drawWireframe();
     mesh.draw();
@@ -56,11 +67,17 @@ void ofApp::draw(){
     vidGrabber.getTextureReference().unbind();
     cam.end();
     ofPopMatrix();
+    
+    if( bHide ){
+		gui.draw();
+	}
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
+    if( key == 'h' ){
+		bHide = !bHide;
+	}
 }
 
 //--------------------------------------------------------------

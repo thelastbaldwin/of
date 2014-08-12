@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxGui.h"
 
 class ofApp : public ofBaseApp{
 	public:
@@ -22,5 +23,12 @@ class ofApp : public ofBaseApp{
     
         ofVideoGrabber vidGrabber;
         ofMesh mesh;
-    ofCamera cam;
+        ofCamera cam;
+    
+        ofxPanel gui;
+        ofxFloatSlider squareSize;
+        ofxFloatSlider cameraX;
+        ofxFloatSlider cameraY;
+        ofxFloatSlider cameraZ;
+        bool bHide;
 };

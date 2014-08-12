@@ -2,6 +2,7 @@
 #version 410
 
 uniform mat4 modelViewProjectionMatrix;
+uniform float squareSize;
 
 layout(points) in;
 //layout(points, max_vertices=1) out;
@@ -17,7 +18,6 @@ out vec4 color;
 
 void main(){
 	color = VertexIn[0].color;
-	float squareSize = 8.0;
 
 	//want to replace this vertex with a quad
 	vec4 newPos;
