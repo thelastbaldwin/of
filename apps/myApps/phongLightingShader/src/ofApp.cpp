@@ -61,17 +61,17 @@ void ofApp::draw(){
     ofEnableDepthTest();
     
     pointLight.enable();
-    ofBackgroundGradient(ofColor::white, ofColor::gray);
+    
     
     material.begin();
     sphere.draw();
     material.end();
     pointLight.disable();
-    fbo.end();
-    
-    fbo.draw(0, 0);
     ofDisableDepthTest();
     ofDisableLighting();
+    fbo.end();
+
+    fbo.draw(0, 0);
     if(!hideGui){
         gui.draw();
     }
