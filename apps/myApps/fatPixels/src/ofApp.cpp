@@ -11,7 +11,7 @@ void ofApp::setup(){
     shader.setGeometryOutputType(GL_TRIANGLE_STRIP);
     shader.setGeometryOutputCount(ofGetWidth() * ofGetHeight()/divisionFactor * 4);
     
-    vidGrabber.setDeviceID(0);
+    vidGrabber.setDeviceID(1);
     vidGrabber.initGrabber(640, 480, true);
     mesh.setMode(OF_PRIMITIVE_POINTS);
     

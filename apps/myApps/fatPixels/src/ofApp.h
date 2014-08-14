@@ -24,6 +24,7 @@ class ofApp : public ofBaseApp{
         ofVideoGrabber vidGrabber;
         ofMesh mesh;
         ofCamera cam;
+        ofLight light;
     
         ofxPanel gui;
         ofxFloatSlider squareSize;
