@@ -19,6 +19,12 @@ void ofApp::setup(){
     gui.add(specularLightColor.setup("specular light color", ofColor(100, 0, 100),
                                     ofColor(0),
                                     ofColor(255)));
+    
+    gui.add(ambientLightColor.setup("ambient light color", ofColor(50, 50, 50),
+                                     ofColor(0),
+                                     ofColor(255)));
+    
+    gui.add(applyMaterial.setup("apply material", true));
 
     gui.add(diffuseMaterialColor.setup("diffuse material color", ofColor(100),
                                        ofColor(0),
@@ -26,7 +32,11 @@ void ofApp::setup(){
     gui.add(specularMaterialColor.setup("specular material color", ofColor(255),
                                        ofColor(0),
                                        ofColor(255)));
-    gui.add(shininess.setup("shininess", 50.0, 0.0, 255.0));
+    gui.add(ambientMaterialColor.setup("ambient material color", ofColor(255),
+                                        ofColor(0),
+                                        ofColor(255)));
+    //confirmed that this must be > 0 and <= 128
+    gui.add(shininess.setup("shininess", 50.0, 0.1, 128.0));
     
     pointLight.setPointLight();
 }
@@ -44,6 +54,8 @@ void ofApp::update(){
     ofColor smColor = specularMaterialColor;
     material.setSpecularColor(smColor);
     material.setShininess(shininess);
+    ofColor ambColor = ambientMaterialColor;
+    material.setAmbientColor(ambColor);
     
     pointLight.setPosition(lightPosition);
     ofColor dlColor = diffuseLightColor;
@@ -61,22 +73,25 @@ void ofApp::draw(){
     ofEnableDepthTest();
     
     pointLight.enable();
+    if(applyMaterial){
+        material.begin();
+    }
     
-    
-    material.begin();
     sphere.draw();
-    material.end();
+    
+    if(applyMaterial){
+        material.end();
+    }
     pointLight.disable();
     ofDisableDepthTest();
     ofDisableLighting();
     fbo.end();
 
+    //prevents strange layering of gui
     fbo.draw(0, 0);
     if(!hideGui){
         gui.draw();
     }
-    
-    
 }
 
 //--------------------------------------------------------------

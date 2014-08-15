@@ -34,11 +34,16 @@ class ofApp : public ofBaseApp{
     ofxColorSlider diffuseLightColor;
     ofxColorSlider specularLightColor;
     
+    ofLight ambientLight;
+    ofxColorSlider ambientLightColor;
+    
     //Material and controls
     ofMaterial material;
     ofxColorSlider diffuseMaterialColor;
     ofxColorSlider specularMaterialColor;
+    ofxColorSlider ambientMaterialColor;
     ofxFloatSlider shininess;
+    ofxToggle applyMaterial;
     
     bool hideGui;
     
