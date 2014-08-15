@@ -33,8 +33,6 @@ class ofApp : public ofBaseApp{
     ofxVec3Slider lightPosition;
     ofxColorSlider diffuseLightColor;
     ofxColorSlider specularLightColor;
-    
-    ofLight ambientLight;
     ofxColorSlider ambientLightColor;
     
     //Material and controls
@@ -44,7 +42,7 @@ class ofApp : public ofBaseApp{
     ofxColorSlider ambientMaterialColor;
     ofxFloatSlider shininess;
     ofxToggle applyMaterial;
-    
+        
     bool hideGui;
     
     ofFbo fbo;

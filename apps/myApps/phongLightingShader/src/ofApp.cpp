@@ -4,19 +4,24 @@
 void ofApp::setup(){
     hideGui = false;
     
+    pointLight = ofLight();
+    material = ofMaterial();
+    
     gui.setup();
     gui.add(radius.setup("radius", 100, 10, 300));
     gui.add(sphereResolution.setup("resolution", 5, 3, 90));
     gui.add(sphereCenter.setup("center",ofVec3f(ofGetWidth()/2, ofGetHeight()/2, 0),
                                         ofVec3f(-ofGetWidth(), -ofGetHeight(), -100),
                                         ofVec3f(ofGetWidth(), ofGetHeight(), 100)));
+
+    
     gui.add(lightPosition.setup("light position", ofVec3f(ofGetWidth()/2 + 100, ofGetWidth()/2 + 100, 500),
                                                 ofVec3f(-ofGetWidth(), -ofGetHeight(), -500),
                                                 ofVec3f(ofGetWidth(), ofGetHeight(), 500)));
-    gui.add(diffuseLightColor.setup("diffuse light color", ofColor(100, 0, 100),
+    gui.add(diffuseLightColor.setup("diffuse light color", ofColor(100, 0),
                                                     ofColor(0),
                                                     ofColor(255)));
-    gui.add(specularLightColor.setup("specular light color", ofColor(100, 0, 100),
+    gui.add(specularLightColor.setup("specular light color", ofColor(100),
                                     ofColor(0),
                                     ofColor(255)));
     
@@ -38,6 +43,7 @@ void ofApp::setup(){
     //confirmed that this must be > 0 and <= 128
     gui.add(shininess.setup("shininess", 50.0, 0.1, 128.0));
     
+    //this is part of the default constructor;
     pointLight.setPointLight();
 }
 
@@ -47,6 +53,7 @@ void ofApp::update(){
     sphere.setRadius(radius);
     sphere.setResolution(sphereResolution);
     sphere.setPosition(sphereCenter);
+    
     
     ofColor dmColor = diffuseMaterialColor;
     //no conversion from ofxColorSlider to ofFloatColor
@@ -62,6 +69,8 @@ void ofApp::update(){
     pointLight.setDiffuseColor(dlColor);
     ofColor slColor = specularLightColor;
     pointLight.setSpecularColor(slColor);
+    ofColor ambLColor = ambientLightColor;
+    pointLight.setAmbientColor(ambLColor);
     
     pointLight.lookAt(sphereCenter);
 }
@@ -71,18 +80,23 @@ void ofApp::draw(){
     fbo.begin();
     ofEnableLighting();
     ofEnableDepthTest();
-    
+
+
     pointLight.enable();
+    pointLight.draw();
+    
+    //somehow this allows the light color and material color to blend
+    glDisable(GL_COLOR_MATERIAL);
     if(applyMaterial){
         material.begin();
     }
     
     sphere.draw();
     
+    pointLight.disable();
     if(applyMaterial){
         material.end();
     }
-    pointLight.disable();
     ofDisableDepthTest();
     ofDisableLighting();
     fbo.end();
