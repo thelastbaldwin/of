@@ -14,7 +14,7 @@ void ofApp::setup(){
     
     wiggleShader.load("shaders/passThroughVert.c", "shaders/horizontalDistortFrag.c");
     
-    vidGrabber.setDeviceID(1);
+    vidGrabber.setDeviceID(0);
     vidGrabber.initGrabber(640, 480, true);
     mesh.setMode(OF_PRIMITIVE_POINTS);
     quad.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
@@ -43,6 +43,7 @@ void ofApp::setup(){
     gui.add(squareSize.setup("square size", 8.0, 0.5, 16.0));
     gui.add(wavelength.setup("wavelength", 0.25, 0.01, 100.0));
     gui.add(amplitude.setup("amplitude", 10.0, 0.1, 100.0));
+    gui.add(speed.setup("speed", 10.0, 1.0, 1000.0));
     gui.add(cameraX.setup("cameraX", ofGetWidth()/2, -ofGetWidth()/2, ofGetWidth()));
     gui.add(cameraY.setup("cameraY", ofGetHeight()/2, -ofGetHeight()/2, ofGetHeight()));
     gui.add(cameraZ.setup("cameraZ", -200, -100, -500));
@@ -93,6 +94,7 @@ void ofApp::draw(){
     wiggleShader.setUniform1f("time", ofGetElapsedTimef());
     wiggleShader.setUniform1f("wavelength", wavelength);
     wiggleShader.setUniform1f("amplitude", amplitude);
+    wiggleShader.setUniform1f("speed", speed);
     quad.draw();
     wiggleShader.end();
     

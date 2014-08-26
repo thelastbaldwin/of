@@ -9,6 +9,7 @@ uniform sampler2DRect texture0;
 uniform float time; //Parameter which we will pass from OF
 uniform float amplitude;
 uniform float wavelength;
+uniform float speed;
 
 out vec4 outputColor;
 
@@ -21,7 +22,7 @@ void main(){
     vec2 pos = vec2(gl_FragCoord.x, gl_FragCoord.y);
     
     //shift the x-position
-    pos.x += cos((pos.y + time)/ wavelength) * amplitude; 
+    pos.x += amplitude * cos((pos.y + time * speed)/ wavelength); 
     
     //get sample color from texture
     vec4 sampleColor = texture(texture0, pos);
