@@ -61,12 +61,20 @@ void ofApp::setup(){
     
     //load video
     videoPlayer.loadMovie("glitch_video.mov");
+    videoPlayer.setLoopState(OF_LOOP_NONE);
     videoPlayer.play();
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
     vidGrabber.update();
+    
+    if(!videoPlayer.isPlaying()){
+        cout << "video complete" << endl;
+        bFade = !bFade;
+        videoPlayer.setPosition(0);
+        videoPlayer.play();
+    }
     videoPlayer.update();
 }
 
@@ -112,6 +120,7 @@ void ofApp::draw(){
 		gui.draw();
 	}
 
+    adjustOpacity(opacity);
 }
 
 //--------------------------------------------------------------
@@ -119,6 +128,19 @@ void ofApp::keyPressed(int key){
     if( key == 'h' ){
 		bHide = !bHide;
 	}
+}
+
+template<typename T> void ofApp::adjustOpacity(T& opacity){
+    const float FADE_RATE = 0.01;
+    
+    if(bFade && opacity >= 0){
+        opacity = opacity - FADE_RATE;
+    
+    }else if(!bFade && opacity <= 1.0){
+        opacity = opacity + FADE_RATE;
+    }
+    
+    opacity = ofClamp(opacity, 0.0, 1.0);
 }
 
 //--------------------------------------------------------------

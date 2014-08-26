@@ -19,6 +19,9 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
+        //this needs to be a template class becuase of the ofxFloatSlider class
+        template<typename T> void adjustOpacity(T& opacity);
+    
         ofShader shader, wiggleShader;
     
         ofVideoGrabber vidGrabber;
@@ -37,6 +40,8 @@ class ofApp : public ofBaseApp{
         ofxFloatSlider cameraZ;
         ofxFloatSlider opacity;
         bool bHide;
+        //if true, fade up
+        bool bFade;
     
         ofFbo fbo;
     
