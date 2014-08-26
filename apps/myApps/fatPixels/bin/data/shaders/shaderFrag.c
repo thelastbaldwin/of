@@ -17,22 +17,7 @@ layout(origin_upper_left) in vec4 gl_FragCoord;
 
 void main()
 {
-    //extract just the x and y values from the current fragmentCoordinates. normally xyzw
-    //vec2 pos = vec2(gl_FragCoord.x, gl_FragCoord.y);
 
-    //modified texture coordinate from vertex shader
-    // vec2 pos = texCoordVarying;
-
-    //outputs the color of the texture at the current position
-    // outputColor = texture(texture0, pos);
-    
-	//updated texture coordinate from vertex shader
-    //vec2 pos = texCoordVarying;
-
-    //outputs the color of the texture at the updated position
-    //outputColor = texture(texture0, pos);
     outputColor = color;
-    
-    //output black
-    //outputColor = vec4(0.0, 0.0, 0.0, 1.0);
+
 }

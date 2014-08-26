@@ -7,15 +7,20 @@ void ofApp::setup(){
     //shader loading
     shader.load("shaders/shaderVert.c", "shaders/shaderFrag.c", "shaders/shaderGeometry.c");
     shader.setGeometryInputType(GL_POINTS);
+    
     //this will be a GL_TRIANGLE_STRIP
     shader.setGeometryOutputType(GL_TRIANGLE_STRIP);
     shader.setGeometryOutputCount(ofGetWidth() * ofGetHeight()/divisionFactor * 4);
     
+    wiggleShader.load("shaders/passThroughVert.c", "shaders/horizontalDistortFrag.c");
+    
     vidGrabber.setDeviceID(1);
     vidGrabber.initGrabber(640, 480, true);
     mesh.setMode(OF_PRIMITIVE_POINTS);
+    quad.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
     
     
+    //set up point mesh
     for(int i = 0; i < ofGetHeight(); i+=divisionFactor){
         for(int j = 0; j < ofGetWidth(); j+=divisionFactor){
             mesh.addVertex(ofPoint(j, i, 0));
@@ -23,9 +28,21 @@ void ofApp::setup(){
         }
     }
     
+    //set up quad mesh
+    quad.addVertex(ofPoint(0, ofGetHeight(), 0));
+    quad.addTexCoord(ofPoint(0, ofGetHeight(), 0));
+    quad.addVertex(ofPoint(0, 0, 0));
+    quad.addTexCoord(ofPoint(0, 0, 0));
+    quad.addVertex(ofPoint(ofGetWidth(), ofGetHeight(), 0));
+    quad.addTexCoord(ofPoint(ofGetWidth(), ofGetHeight(), 0));
+    quad.addVertex(ofPoint(ofGetWidth(), 0, 0));
+    quad.addTexCoord(ofPoint(ofGetWidth(), 0, 0));
+    
     //gui
     gui.setup();
     gui.add(squareSize.setup("square size", 8.0, 0.5, 16.0));
+    gui.add(wavelength.setup("wavelength", 0.25, 0.01, 100.0));
+    gui.add(amplitude.setup("amplitude", 10.0, 0.1, 100.0));
     gui.add(cameraX.setup("cameraX", ofGetWidth()/2, -ofGetWidth()/2, ofGetWidth()));
     gui.add(cameraY.setup("cameraY", ofGetHeight()/2, -ofGetHeight()/2, ofGetHeight()));
     gui.add(cameraZ.setup("cameraZ", -200, -100, -500));
@@ -36,6 +53,8 @@ void ofApp::setup(){
     cam.lookAt(ofVec3f(ofGetWidth()/2, ofGetHeight()/2, 0));
     cam.setFov(60);
     cam.setVFlip(true);
+    
+    fbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGB);
 }
 
 //--------------------------------------------------------------
@@ -45,6 +64,7 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    fbo.begin();
     ofBackground(0, 0, 0);
     
     ofPushMatrix();
@@ -60,13 +80,21 @@ void ofApp::draw(){
     
     shader.setUniform1f("squareSize", squareSize);
     
-//    mesh.drawWireframe();
     mesh.draw();
     
     shader.end();
     vidGrabber.getTextureReference().unbind();
     cam.end();
     ofPopMatrix();
+    fbo.end();
+    
+    fbo.getTextureReference().bind();
+    wiggleShader.begin();
+    wiggleShader.setUniform1f("time", ofGetElapsedTimef());
+    wiggleShader.setUniform1f("wavelength", wavelength);
+    wiggleShader.setUniform1f("amplitude", amplitude);
+    quad.draw();
+    wiggleShader.end();
     
     if( bHide ){
 		gui.draw();

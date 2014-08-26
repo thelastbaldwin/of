@@ -19,17 +19,21 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
-        ofShader shader;
+        ofShader shader, wiggleShader;
     
         ofVideoGrabber vidGrabber;
-        ofMesh mesh;
+        ofMesh mesh, quad;
         ofCamera cam;
         ofLight light;
     
         ofxPanel gui;
         ofxFloatSlider squareSize;
+        ofxFloatSlider wavelength;
+        ofxFloatSlider amplitude;
         ofxFloatSlider cameraX;
         ofxFloatSlider cameraY;
         ofxFloatSlider cameraZ;
         bool bHide;
+    
+        ofFbo fbo;
 };
