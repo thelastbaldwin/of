@@ -51,6 +51,7 @@ void ofApp::setup(){
     gui.add(opacity.setup("opacity", 1.0, 0.0, 1.0));
     
     bHide = true;
+	bFade = false;
     
     cam.setPosition(ofGetWidth()/2, ofGetHeight()/2, cameraZ);
     cam.lookAt(ofVec3f(ofGetWidth()/2, ofGetHeight()/2, 0));
@@ -61,6 +62,7 @@ void ofApp::setup(){
     
     //load video
     videoPlayer.loadMovie("glitch_video.mov");
+	videoPlayer.setPosition(0.0);
     videoPlayer.setLoopState(OF_LOOP_NONE);
     videoPlayer.play();
 }
@@ -69,10 +71,10 @@ void ofApp::setup(){
 void ofApp::update(){
     vidGrabber.update();
     
-    if(!videoPlayer.isPlaying()){
+    if(videoPlayer.getIsMovieDone()){
         cout << "video complete" << endl;
         bFade = !bFade;
-        videoPlayer.setPosition(0);
+		videoPlayer.setPosition(0.0);
         videoPlayer.play();
     }
     videoPlayer.update();
@@ -131,7 +133,7 @@ void ofApp::keyPressed(int key){
 }
 
 template<typename T> void ofApp::adjustOpacity(T& opacity){
-    const float FADE_RATE = 0.01;
+    const float FADE_RATE = 0.03;
     
     if(bFade && opacity >= 0){
         opacity = opacity - FADE_RATE;
