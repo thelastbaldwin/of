@@ -6,10 +6,12 @@
 // should have opacity applied from main app
 
 uniform sampler2DRect texture0;
+uniform sampler2DRect video;
 uniform float time; //Parameter which we will pass from OF
 uniform float amplitude;
 uniform float wavelength;
 uniform float speed;
+uniform float opacity;
 
 out vec4 outputColor;
 
@@ -20,6 +22,9 @@ layout(origin_upper_left) in vec4 gl_FragCoord;
 void main(){
     //extract just the x and y values from the current fragmentCoordinates
     vec2 pos = vec2(gl_FragCoord.x, gl_FragCoord.y);
+
+    //want the unmodified texture coordiniate
+    vec2 originalPos = pos;
     
     //shift the x-position
     pos.x += amplitude * cos((pos.y + time * speed)/ wavelength); 
@@ -27,6 +32,8 @@ void main(){
     //get sample color from texture
     vec4 sampleColor = texture(texture0, pos);
 
-    //construct a new vec4 from the vec3 plus a hard-coded alpha
-    outputColor = sampleColor;
+    //color from video Texture
+    vec4 movieColor = texture(video, originalPos);
+    
+    outputColor = vec4(sampleColor.rgb*opacity + movieColor.rgb*(1.0 - opacity), 1.0);
 }

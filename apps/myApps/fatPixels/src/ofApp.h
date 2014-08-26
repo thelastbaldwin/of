@@ -30,11 +30,15 @@ class ofApp : public ofBaseApp{
         ofxFloatSlider squareSize;
         ofxFloatSlider wavelength;
         ofxFloatSlider amplitude;
+        ofxIntSlider scanlineHeight;
         ofxFloatSlider speed;
         ofxFloatSlider cameraX;
         ofxFloatSlider cameraY;
         ofxFloatSlider cameraZ;
+        ofxFloatSlider opacity;
         bool bHide;
     
         ofFbo fbo;
+    
+        ofVideoPlayer videoPlayer;
 };

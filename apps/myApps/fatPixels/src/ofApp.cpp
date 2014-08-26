@@ -47,6 +47,8 @@ void ofApp::setup(){
     gui.add(cameraX.setup("cameraX", ofGetWidth()/2, -ofGetWidth()/2, ofGetWidth()));
     gui.add(cameraY.setup("cameraY", ofGetHeight()/2, -ofGetHeight()/2, ofGetHeight()));
     gui.add(cameraZ.setup("cameraZ", -200, -100, -500));
+    gui.add(scanlineHeight.setup("scanline height", 10, 4, 20));
+    gui.add(opacity.setup("opacity", 1.0, 0.0, 1.0));
     
     bHide = true;
     
@@ -55,19 +57,23 @@ void ofApp::setup(){
     cam.setFov(60);
     cam.setVFlip(true);
     
-    fbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGB);
+    fbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
+    
+    //load video
+    videoPlayer.loadMovie("glitch_video.mov");
+    videoPlayer.play();
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
     vidGrabber.update();
+    videoPlayer.update();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
     fbo.begin();
     ofBackground(0, 0, 0);
-    
     ofPushMatrix();
     ofScale(-1.0, 1.0);
     ofTranslate(-ofGetWidth(), 0);
@@ -91,16 +97,21 @@ void ofApp::draw(){
     
     fbo.getTextureReference().bind();
     wiggleShader.begin();
+    
+    wiggleShader.setUniformTexture("video", videoPlayer.getTextureReference(), 1);
     wiggleShader.setUniform1f("time", ofGetElapsedTimef());
     wiggleShader.setUniform1f("wavelength", wavelength);
     wiggleShader.setUniform1f("amplitude", amplitude);
     wiggleShader.setUniform1f("speed", speed);
+    wiggleShader.setUniform1i("scanlineHeight", scanlineHeight);
+    wiggleShader.setUniform1f("opacity", opacity);
     quad.draw();
     wiggleShader.end();
     
     if( bHide ){
 		gui.draw();
 	}
+
 }
 
 //--------------------------------------------------------------
