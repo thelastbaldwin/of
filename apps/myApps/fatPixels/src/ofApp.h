@@ -18,6 +18,7 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+        void generateScanlineImage(ofImage& img, int scanLineHeight, float opacity = 0.1);
     
         //this needs to be a template class becuase of the ofxFloatSlider class
         template<typename T> void adjustOpacity(T& opacity);
@@ -28,6 +29,7 @@ class ofApp : public ofBaseApp{
         ofMesh mesh, quad;
         ofCamera cam;
         ofLight light;
+        ofImage scanLineImage;
     
         ofxPanel gui;
         ofxFloatSlider squareSize;
@@ -38,6 +40,7 @@ class ofApp : public ofBaseApp{
         ofxFloatSlider cameraX;
         ofxFloatSlider cameraY;
         ofxFloatSlider cameraZ;
+        ofxToggle doFade;
         ofxFloatSlider opacity;
         bool bHide;
         //if true, fade up
@@ -46,4 +49,18 @@ class ofApp : public ofBaseApp{
         ofFbo fbo;
     
         ofVideoPlayer videoPlayer;
+    
+        struct Settings{
+          float squareSize,
+                wavelength,
+                amplitude,
+                speed,
+                cameraX,
+                cameraY,
+                cameraZ,
+                opacity;
+        };
+    
+        Settings defaultSettings;
+        Settings wigoutSettings;
 };

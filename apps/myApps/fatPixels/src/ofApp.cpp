@@ -4,6 +4,16 @@
 void ofApp::setup(){
     int divisionFactor = 8;
     
+    //defualt settings
+    defaultSettings.squareSize = 8.0;
+    defaultSettings.wavelength = 0.01;
+    defaultSettings.amplitude = 0.1;
+    defaultSettings.speed = 1.0;
+    defaultSettings.cameraX = ofGetWidth()/2;
+    defaultSettings.cameraY = ofGetHeight()/2;
+    defaultSettings.cameraZ = -200;
+    defaultSettings.opacity = 1.0;
+    
     //shader loading
     shader.load("shaders/shaderVert.c", "shaders/shaderFrag.c", "shaders/shaderGeometry.c");
     shader.setGeometryInputType(GL_POINTS);
@@ -40,15 +50,16 @@ void ofApp::setup(){
     
     //gui
     gui.setup();
-    gui.add(squareSize.setup("square size", 8.0, 0.5, 16.0));
-    gui.add(wavelength.setup("wavelength", 0.25, 0.01, 100.0));
-    gui.add(amplitude.setup("amplitude", 10.0, 0.1, 100.0));
-    gui.add(speed.setup("speed", 10.0, 1.0, 1000.0));
-    gui.add(cameraX.setup("cameraX", ofGetWidth()/2, -ofGetWidth()/2, ofGetWidth()));
-    gui.add(cameraY.setup("cameraY", ofGetHeight()/2, -ofGetHeight()/2, ofGetHeight()));
-    gui.add(cameraZ.setup("cameraZ", -200, -100, -500));
+    gui.add(squareSize.setup("square size", defaultSettings.squareSize, 0.5, 16.0));
+    gui.add(wavelength.setup("wavelength", defaultSettings.wavelength, 0.01, 100.0));
+    gui.add(amplitude.setup("amplitude", defaultSettings.amplitude, 0.1, 100.0));
+    gui.add(speed.setup("speed", defaultSettings.speed, 1.0, 1000.0));
+    gui.add(cameraX.setup("cameraX", defaultSettings.cameraX, -ofGetWidth()/2, ofGetWidth()));
+    gui.add(cameraY.setup("cameraY", defaultSettings.cameraY, -ofGetHeight()/2, ofGetHeight()));
+    gui.add(cameraZ.setup("cameraZ", defaultSettings.cameraZ, -100, -500));
     gui.add(scanlineHeight.setup("scanline height", 10, 4, 20));
-    gui.add(opacity.setup("opacity", 1.0, 0.0, 1.0));
+    gui.add(doFade.setup("enable fading", true));
+    gui.add(opacity.setup("opacity", defaultSettings.opacity, 0.0, 1.0));
     
     bHide = true;
 	bFade = false;
@@ -65,6 +76,8 @@ void ofApp::setup(){
 	videoPlayer.setPosition(0.0);
     videoPlayer.setLoopState(OF_LOOP_NONE);
     videoPlayer.play();
+    
+    scanLineImage.allocate(ofGetWidth(), ofGetHeight(), OF_IMAGE_COLOR_ALPHA);
 }
 
 //--------------------------------------------------------------
@@ -135,10 +148,10 @@ void ofApp::keyPressed(int key){
 template<typename T> void ofApp::adjustOpacity(T& opacity){
     const float FADE_RATE = 0.03;
     
-    if(bFade && opacity >= 0){
+    if(doFade && bFade && opacity >= 0){
         opacity = opacity - FADE_RATE;
     
-    }else if(!bFade && opacity <= 1.0){
+    }else if(doFade && !bFade && opacity <= 1.0){
         opacity = opacity + FADE_RATE;
     }
     
@@ -147,7 +160,33 @@ template<typename T> void ofApp::adjustOpacity(T& opacity){
 
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
+    
+}
 
+
+//--------------------------------------------------------------
+void generateScanlineImage(ofImage& img, int scanLineHeight, float opacity){
+    ofPixels pixels = img.getPixelsRef();
+    int currentPixelCount = 0,
+        index = 0,
+        totalPixels = img.getWidth() * img.getHeight() * 4,
+//        since the pixels are a 1D array, we need to
+//        traverse the array in terms of sections of the scanline images
+//        total width
+        scanLineWidth = scanLineHeight * img.getWidth();
+    //start with filled in
+    bool isDark = true;
+
+    while(index != totalPixels){
+        if(currentPixelCount < scanLineWidth){
+
+        }
+        
+        ++currentPixelCount;
+        ++index;
+    }
+    
+    img.reloadTexture();
 }
 
 //--------------------------------------------------------------
