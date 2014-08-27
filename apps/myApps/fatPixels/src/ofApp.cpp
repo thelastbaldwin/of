@@ -52,7 +52,7 @@ void ofApp::setup(){
     //gui
     gui.setup();
     gui.add(squareSize.setup("square size", defaultSettings.squareSize, 0.5, 16.0));
-    gui.add(wavelength.setup("wavelength", defaultSettings.wavelength, 0.01, 100.0));
+    gui.add(wavelength.setup("wavelength", defaultSettings.wavelength, 0.01, 10.0));
     gui.add(amplitude.setup("amplitude", defaultSettings.amplitude, 0.1, 100.0));
     gui.add(speed.setup("speed", defaultSettings.speed, 1.0, 1000.0));
     gui.add(cameraX.setup("cameraX", defaultSettings.cameraX, -ofGetWidth()/2, ofGetWidth()));
@@ -88,7 +88,6 @@ void ofApp::update(){
     vidGrabber.update();
     
     if(videoPlayer.getIsMovieDone()){
-        cout << "video complete" << endl;
         bFade = !bFade;
 		videoPlayer.setPosition(0.0);
         videoPlayer.play();
@@ -154,8 +153,12 @@ void ofApp::keyPressed(int key){
 		bHide = !bHide;
 	}
     
-    if (key == 's') {
-        scanlineImage.saveImage("scanlines.png");
+    if (key == 'r') {
+        reset();
+    }
+    
+    if (key == 'w'){
+        shuffleSettings();
     }
 }
 
@@ -171,6 +174,30 @@ template<typename T> void ofApp::adjustOpacity(T& opacity){
     
     opacity = ofClamp(opacity, 0.0, 1.0);
 }
+
+//--------------------------------------------------------------
+void ofApp::reset(){
+    squareSize = defaultSettings.squareSize;
+    wavelength = defaultSettings.wavelength;
+    amplitude = defaultSettings.amplitude;
+    speed = defaultSettings.speed;
+    cameraX = defaultSettings.cameraX;
+    cameraY = defaultSettings.cameraY;
+    cameraZ = defaultSettings.cameraZ;
+    scanlineHeight = defaultSettings.scanlineHeight;
+}
+
+void ofApp::shuffleSettings(){
+    squareSize = ofRandom(2.0, 10.0);
+    wavelength = ofRandom(5.0, 100.0);
+    amplitude = ofRandom(20.0, 80.0);
+    speed = ofRandom(180.0, 700.0);
+    cameraX = ofRandom(180.0, 380.0);
+    cameraY = ofRandom(100.0, 220.0);
+    cameraZ = ofRandom(-200.0, -100.0);
+    
+}
+
 
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
