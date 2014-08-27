@@ -34,6 +34,7 @@ void main(){
     
     //get sample color from texture
     vec4 sampleColor = texture(texture0, pos);
+    //remove a proportional amount of color based on the scanline texture color
     sampleColor.rgb = sampleColor.rgb - sampleColor.rgb * scanlineColor.a;
 
     //color from video Texture

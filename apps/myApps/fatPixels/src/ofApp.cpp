@@ -25,7 +25,7 @@ void ofApp::setup(){
     
     wiggleShader.load("shaders/passThroughVert.c", "shaders/horizontalDistortFrag.c");
     
-    vidGrabber.setDeviceID(1);
+    vidGrabber.setDeviceID(0);
     vidGrabber.initGrabber(640, 480, true);
     mesh.setMode(OF_PRIMITIVE_POINTS);
     quad.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
@@ -79,7 +79,7 @@ void ofApp::setup(){
     videoPlayer.play();
     
     scanlineImage.allocate(ofGetWidth(), ofGetHeight(), OF_IMAGE_COLOR_ALPHA);
-    generateScanlineImage(scanlineImage, scanlineHeight, 0.1);
+    generateScanlineImage(scanlineImage, scanlineHeight);
     prevScanlineHeight = scanlineHeight;
 }
 
@@ -182,6 +182,7 @@ void ofApp::keyReleased(int key){
 void ofApp::generateScanlineImage(ofImage& img, int scanLineHeight, float opacity){
     //generate a scanLine pattern in a provided image
     
+    
     ofPixels pixels = img.getPixelsRef();
     int currentPixelCount = 0,
     index = 0;
@@ -194,6 +195,8 @@ void ofApp::generateScanlineImage(ofImage& img, int scanLineHeight, float opacit
     
     //columns
     for(int i = 0; i < img.getHeight(); ++i){
+        //this modulo operation could happen in the shader itself,
+        //making the need for this texture generation obsolete
         if(i % scanLineHeight == 0){
             isDark = !isDark;
         }

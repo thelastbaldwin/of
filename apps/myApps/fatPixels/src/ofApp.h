@@ -18,7 +18,7 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
-        void generateScanlineImage(ofImage& img, int scanLineHeight, float opacity = 0.1);
+        void generateScanlineImage(ofImage& img, int scanLineHeight, float opacity = 0.3);
     
         //this needs to be a template class becuase of the ofxFloatSlider class
         template<typename T> void adjustOpacity(T& opacity);
