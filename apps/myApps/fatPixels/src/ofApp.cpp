@@ -13,6 +13,7 @@ void ofApp::setup(){
     defaultSettings.cameraY = ofGetHeight()/2;
     defaultSettings.cameraZ = -200;
     defaultSettings.opacity = 1.0;
+    defaultSettings.scanlineHeight = 2;
     
     //shader loading
     shader.load("shaders/shaderVert.c", "shaders/shaderFrag.c", "shaders/shaderGeometry.c");
@@ -24,7 +25,7 @@ void ofApp::setup(){
     
     wiggleShader.load("shaders/passThroughVert.c", "shaders/horizontalDistortFrag.c");
     
-    vidGrabber.setDeviceID(0);
+    vidGrabber.setDeviceID(1);
     vidGrabber.initGrabber(640, 480, true);
     mesh.setMode(OF_PRIMITIVE_POINTS);
     quad.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
@@ -57,7 +58,7 @@ void ofApp::setup(){
     gui.add(cameraX.setup("cameraX", defaultSettings.cameraX, -ofGetWidth()/2, ofGetWidth()));
     gui.add(cameraY.setup("cameraY", defaultSettings.cameraY, -ofGetHeight()/2, ofGetHeight()));
     gui.add(cameraZ.setup("cameraZ", defaultSettings.cameraZ, -100, -500));
-    gui.add(scanlineHeight.setup("scanline height", 10, 4, 20));
+    gui.add(scanlineHeight.setup("scanline height", defaultSettings.scanlineHeight, 1, 20));
     gui.add(doFade.setup("enable fading", true));
     gui.add(opacity.setup("opacity", defaultSettings.opacity, 0.0, 1.0));
     
@@ -77,7 +78,9 @@ void ofApp::setup(){
     videoPlayer.setLoopState(OF_LOOP_NONE);
     videoPlayer.play();
     
-    scanLineImage.allocate(ofGetWidth(), ofGetHeight(), OF_IMAGE_COLOR_ALPHA);
+    scanlineImage.allocate(ofGetWidth(), ofGetHeight(), OF_IMAGE_COLOR_ALPHA);
+    generateScanlineImage(scanlineImage, scanlineHeight, 0.1);
+    prevScanlineHeight = scanlineHeight;
 }
 
 //--------------------------------------------------------------
@@ -90,6 +93,12 @@ void ofApp::update(){
 		videoPlayer.setPosition(0.0);
         videoPlayer.play();
     }
+    
+    if (prevScanlineHeight != scanlineHeight) {
+        generateScanlineImage(scanlineImage, scanlineHeight);
+        prevScanlineHeight = scanlineHeight;
+    }
+    
     videoPlayer.update();
 }
 
@@ -122,6 +131,7 @@ void ofApp::draw(){
     wiggleShader.begin();
     
     wiggleShader.setUniformTexture("video", videoPlayer.getTextureReference(), 1);
+    wiggleShader.setUniformTexture("scanlines", scanlineImage.getTextureReference(), 2);
     wiggleShader.setUniform1f("time", ofGetElapsedTimef());
     wiggleShader.setUniform1f("wavelength", wavelength);
     wiggleShader.setUniform1f("amplitude", amplitude);
@@ -143,6 +153,10 @@ void ofApp::keyPressed(int key){
     if( key == 'h' ){
 		bHide = !bHide;
 	}
+    
+    if (key == 's') {
+        scanlineImage.saveImage("scanlines.png");
+    }
 }
 
 template<typename T> void ofApp::adjustOpacity(T& opacity){
@@ -165,27 +179,38 @@ void ofApp::keyReleased(int key){
 
 
 //--------------------------------------------------------------
-void generateScanlineImage(ofImage& img, int scanLineHeight, float opacity){
+void ofApp::generateScanlineImage(ofImage& img, int scanLineHeight, float opacity){
+    //generate a scanLine pattern in a provided image
+    
     ofPixels pixels = img.getPixelsRef();
     int currentPixelCount = 0,
-        index = 0,
-        totalPixels = img.getWidth() * img.getHeight() * 4,
-//        since the pixels are a 1D array, we need to
-//        traverse the array in terms of sections of the scanline images
-//        total width
-        scanLineWidth = scanLineHeight * img.getWidth();
-    //start with filled in
+    index = 0;
+    //start with black
     bool isDark = true;
-
-    while(index != totalPixels){
-        if(currentPixelCount < scanLineWidth){
-
+    
+    const ofColor black(0, 0, 0, opacity * 255);
+    const ofColor transparent(0, 0, 0, 0);
+    ofColor currentColor;
+    
+    //columns
+    for(int i = 0; i < img.getHeight(); ++i){
+        if(i % scanLineHeight == 0){
+            isDark = !isDark;
         }
         
-        ++currentPixelCount;
-        ++index;
+        if(isDark){
+            currentColor = black;
+        }else{
+            currentColor = transparent;
+        }
+        
+        //rows
+        for(int j = 0; j < img.getWidth(); ++j){
+            pixels.setColor(j, i, currentColor);
+        }
     }
     
+    img.setFromPixels(pixels);
     img.reloadTexture();
 }
 

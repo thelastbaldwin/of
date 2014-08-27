@@ -29,13 +29,14 @@ class ofApp : public ofBaseApp{
         ofMesh mesh, quad;
         ofCamera cam;
         ofLight light;
-        ofImage scanLineImage;
+        ofImage scanlineImage;
     
         ofxPanel gui;
         ofxFloatSlider squareSize;
         ofxFloatSlider wavelength;
         ofxFloatSlider amplitude;
         ofxIntSlider scanlineHeight;
+        int prevScanlineHeight;
         ofxFloatSlider speed;
         ofxFloatSlider cameraX;
         ofxFloatSlider cameraY;
@@ -59,6 +60,7 @@ class ofApp : public ofBaseApp{
                 cameraY,
                 cameraZ,
                 opacity;
+            int scanlineHeight;
         };
     
         Settings defaultSettings;

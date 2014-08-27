@@ -7,6 +7,7 @@
 
 uniform sampler2DRect texture0;
 uniform sampler2DRect video;
+uniform sampler2DRect scanlines;
 uniform float time; //Parameter which we will pass from OF
 uniform float amplitude;
 uniform float wavelength;
@@ -28,12 +29,15 @@ void main(){
     
     //shift the x-position
     pos.x += amplitude * cos((pos.y + time * speed)/ wavelength); 
+
+    vec4 scanlineColor = texture(scanlines, originalPos);
     
     //get sample color from texture
     vec4 sampleColor = texture(texture0, pos);
+    sampleColor.rgb = sampleColor.rgb - sampleColor.rgb * scanlineColor.a;
 
     //color from video Texture
     vec4 movieColor = texture(video, originalPos);
-    
+
     outputColor = vec4(sampleColor.rgb*opacity + movieColor.rgb*(1.0 - opacity), 1.0);
 }
