@@ -1,5 +1,7 @@
 #include "ofApp.h"
 
+const float ofApp::WIGOUT_INTERVAL = 1.0;
+
 //--------------------------------------------------------------
 void ofApp::setup(){
     int divisionFactor = 8;
@@ -61,6 +63,7 @@ void ofApp::setup(){
     gui.add(scanlineHeight.setup("scanline height", defaultSettings.scanlineHeight, 1, 20));
     gui.add(doFade.setup("enable fading", true));
     gui.add(opacity.setup("opacity", defaultSettings.opacity, 0.0, 1.0));
+    gui.add(bWigout.setup("enable wigout", true));
     
     bHide = true;
 	bFade = false;
@@ -81,6 +84,9 @@ void ofApp::setup(){
     scanlineImage.allocate(ofGetWidth(), ofGetHeight(), OF_IMAGE_COLOR_ALPHA);
     generateScanlineImage(scanlineImage, scanlineHeight);
     prevScanlineHeight = scanlineHeight;
+    
+    doWigout = false;
+    targetTime = 0.0;
 }
 
 //--------------------------------------------------------------
@@ -99,6 +105,25 @@ void ofApp::update(){
     }
     
     videoPlayer.update();
+    
+    time = ofGetElapsedTimef();
+    cout << time << ", " << targetTime <<  endl;
+    
+    if (bWigout && time >= targetTime) {
+        if (doWigout) {
+            cout << "here" << endl;
+            shuffleSettings();
+            targetTime = time + WIGOUT_INTERVAL;
+            doWigout = !doWigout;
+        }else {
+            cout << "there" << endl;
+            reset();
+            targetTime = time + ofRandom(3.0, 5.0);
+            doWigout = !doWigout;
+        }
+
+    }
+    
 }
 
 //--------------------------------------------------------------
@@ -131,7 +156,7 @@ void ofApp::draw(){
     
     wiggleShader.setUniformTexture("video", videoPlayer.getTextureReference(), 1);
     wiggleShader.setUniformTexture("scanlines", scanlineImage.getTextureReference(), 2);
-    wiggleShader.setUniform1f("time", ofGetElapsedTimef());
+    wiggleShader.setUniform1f("time", time);
     wiggleShader.setUniform1f("wavelength", wavelength);
     wiggleShader.setUniform1f("amplitude", amplitude);
     wiggleShader.setUniform1f("speed", speed);

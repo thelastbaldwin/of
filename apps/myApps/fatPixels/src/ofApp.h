@@ -44,6 +44,7 @@ class ofApp : public ofBaseApp{
         ofxFloatSlider cameraY;
         ofxFloatSlider cameraZ;
         ofxToggle doFade;
+        ofxToggle bWigout;
         ofxFloatSlider opacity;
         bool bHide;
         //if true, fade up
@@ -66,5 +67,15 @@ class ofApp : public ofBaseApp{
         };
     
         Settings defaultSettings;
-        Settings wigoutSettings;
+    
+        //wigout interval variables
+        float targetTime,
+            stableInterval, //want an amount between 20 and 30 seconds
+            time;
+
+        //initialization of static floats in the header file is
+        //apparently no bueno http://stackoverflow.com/questions/2454019/why-arent-static-const-floats-allowed
+        const static float WIGOUT_INTERVAL;
+        bool doWigout;
+    
 };
