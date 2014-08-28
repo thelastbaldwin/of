@@ -107,16 +107,13 @@ void ofApp::update(){
     videoPlayer.update();
     
     time = ofGetElapsedTimef();
-    cout << time << ", " << targetTime <<  endl;
     
     if (bWigout && time >= targetTime) {
         if (doWigout) {
-            cout << "here" << endl;
             shuffleSettings();
             targetTime = time + WIGOUT_INTERVAL;
             doWigout = !doWigout;
         }else {
-            cout << "there" << endl;
             reset();
             targetTime = time + ofRandom(3.0, 5.0);
             doWigout = !doWigout;
