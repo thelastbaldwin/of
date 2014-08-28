@@ -45,18 +45,26 @@ void ofApp::update(){
 void ofApp::draw(){
 	ofSetHexColor(0xffffff);
     int offset = 0;
+    std::stringstream ss;
+f
 	/*for(auto cam: cams){
         cam.draw(offset * 320, 0);
         ++offset;
     }*/
     for(int i = 0; i < cams.size(); ++i){
+    ss << i;
         if(i < 5){
             cams[i].draw((i % 5) * 320, 0);
+            ofDrawBitmapString(ss.str(), (i % 5) * 320, 0 + 10);
         }
         else{
             cams[i].draw((i % 5) * 320, 240);
+            ofDrawBitmapString(ss.str(), (i % 5) * 320, 240 + 10);
         }
+        ss.str("");
     }
+
+
 }
 
 
