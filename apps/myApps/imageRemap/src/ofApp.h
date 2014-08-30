@@ -19,15 +19,12 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
-        ofImage getSortedImage(ofImage& source);
-        void remapColors(const ofImage& source, ofImage& destination);
-        std::vector<ofColor> sortPixels(const ofImage& source);
+        void remapColors(const ofPixels& source, ofPixels& destination);
+        std::vector<ofColor> sortPixels(const ofPixels& source);
     
         ofImage forest,
                 ocean;
 		
 };
-
- bool compareColors(const ofColor&  a, const ofColor& b);
 
 
