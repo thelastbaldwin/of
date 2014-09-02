@@ -138,6 +138,7 @@ void ofApp::draw(){
     vidGrabber.getTextureReference().bind();
     shader.begin();
     
+    shader.setUniformTexture("video", videoPlayer.getTextureReference(), 1);
     shader.setUniform1f("squareSize", squareSize);
     
     mesh.draw();

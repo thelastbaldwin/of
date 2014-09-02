@@ -7,6 +7,7 @@ in vec2 texcoord;
 in vec3 normal;
 
 uniform sampler2DRect texture0;
+uniform sampler2DRect video;
 uniform float time;
 
 out VertexData{
@@ -17,14 +18,14 @@ out VertexData{
 
 void main(){
     VertexOut.texCoord = texcoord;
-    VertexOut.color = texture(texture0, texcoord);
+    VertexOut.color = texture(video, texcoord);
     VertexOut.normal = normal;
 
     //this should be adjustable from the main application
     float scale = 100;
 
     //not strictly based on brightness, just one channel
-    float displacementZ = texture(texture0, texcoord).r;
+    float displacementZ = texture(video, texcoord).r;
     vec4 modifiedPosition = position;
     modifiedPosition.z += displacementZ * scale;
 
