@@ -4,13 +4,14 @@
 void ofApp::setup(){
     ocean.loadImage("ocean.jpg");
     forest.loadImage("forest.jpg");
+    colorMap.allocate(ofGetWidth(), ofGetHeight(), OF_IMAGE_COLOR_ALPHA);
     
     ocean.resize(ofGetWidth(), ofGetHeight());
     forest.resize(ofGetWidth(), ofGetHeight());
     
-    remapColors(forest, ocean);
-    ocean.reloadTexture();
-    forest.reloadTexture();
+//    remapColors(forest, ocean);
+//    ocean.reloadTexture();
+//    forest.reloadTexture();
     
 //    std::vector<ofColor> sortedForestColors = sortPixels(forest.getPixelsRef());
     
@@ -25,16 +26,71 @@ void ofApp::setup(){
 //    }
 //
 //    forest.reloadTexture();
+    
+    vidGrabber.setDeviceID(0);
+    vidGrabber.initGrabber(640, 480, true);
+    
+    shader.load("shaders/shaderVert.c", "shaders/shaderFrag.c");
+    
+    //set up quad mesh
+    quad.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
+    quad.addVertex(ofPoint(0, ofGetHeight(), 0));
+    quad.addTexCoord(ofPoint(0, ofGetHeight(), 0));
+    quad.addVertex(ofPoint(0, 0, 0));
+    quad.addTexCoord(ofPoint(0, 0, 0));
+    quad.addVertex(ofPoint(ofGetWidth(), ofGetHeight(), 0));
+    quad.addTexCoord(ofPoint(ofGetWidth(), ofGetHeight(), 0));
+    quad.addVertex(ofPoint(ofGetWidth(), 0, 0));
+    quad.addTexCoord(ofPoint(ofGetWidth(), 0, 0));
+    
+    
+    // prefill array with transparent black
+    // we'll be mixing colors in the shader
+    // and this will allow the original color to come through
+    // if necessary
+    ofFloatColor transBlack = ofFloatColor(0.0, 0.0, 0.0, 1.0);
+    //rows
+    for (int i = 0; i < colorMap.getHeight(); ++i) {
+        //columns
+        for (int j = 0; j < colorMap.getWidth(); ++j) {
+            colorMap.getPixelsRef().setColor(j, i, transBlack);
+        }
+    }
+
+    colorMap.reloadTexture();
+
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
+    vidGrabber.update();
+   
+    ofPixels vidPix = vidGrabber.getPixelsRef();
+    
+    for (int i = 0; i < colorMap.getHeight(); ++i) {
+        //columns
+        for (int j = 0; j < colorMap.getWidth(); ++j) {
+            ofFloatColor currentColor = vidPix.getColor(j, i);
+            //the y value below could be 0, but adding a y value looks crazy!
+            colorMap.getPixelsRef().setColor((int)(currentColor.getBrightness() * 255), i, currentColor);
+        }
+    }
+    
+    colorMap.reloadTexture();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-        ocean.draw(0, 0);
+    //    goal: get a static image to display with colors from
+    //    the webcam
+    vidGrabber.getTextureReference().bind();
+    shader.begin();
+    shader.setUniformTexture("forest", forest.getTextureReference(), 1);
+    shader.setUniformTexture("mappedColors", colorMap.getTextureReference(), 2);
+    
+    quad.draw();
+    
+    shader.end();
 }
 
 //--------------------------------------------------------------

@@ -23,8 +23,16 @@ class ofApp : public ofBaseApp{
         std::vector<ofColor> sortPixels(const ofPixels& source);
     
         ofImage forest,
-                ocean;
+                ocean,
+                colorMap;
 		
+        ofVideoGrabber vidGrabber;
+    
+        ofShader shader;
+        ofMesh quad;
+    
+        const static int COLOR_COUNT = 255;
+        ofFloatColor destinationColors[COLOR_COUNT];
 };
 
 
