@@ -77,11 +77,16 @@ float snoise(vec2 v)
 uniform sampler2DRect texture0;
 uniform sampler2DRect video;
 uniform sampler2DRect scanlines;
+uniform sampler2DRect mappedColors;
 uniform float time; //Parameter which we will pass from OF
 uniform float amplitude;
 uniform float wavelength;
 uniform float speed;
 uniform float opacity;
+
+int getBrightnessIndex(vec4 inputColor){
+  return int(dot(inputColor, vec4(0.25) * 255));
+}
 
 out vec4 outputColor;
 
