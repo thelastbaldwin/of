@@ -67,23 +67,23 @@ void ofApp::update(){
    
     ofPixels vidPix = vidGrabber.getPixelsRef();
     
-    for (int i = 0; i < colorMap.getHeight(); ++i) {
-        //columns
-        for (int j = 0; j < colorMap.getWidth(); ++j) {
-            ofFloatColor currentColor = vidPix.getColor(j, i);
-            //the y value below could be 0, but adding a y value looks crazy!
-            colorMap.getPixelsRef().setColor((int)(currentColor.getBrightness() * 255), i, currentColor);
-        }
-    }
-    
 //    for (int i = 0; i < colorMap.getHeight(); ++i) {
 //        //columns
 //        for (int j = 0; j < colorMap.getWidth(); ++j) {
-//            ofFloatColor currentColor = forest.getColor(j, i);
+//            ofFloatColor currentColor = vidPix.getColor(j, i);
 //            //the y value below could be 0, but adding a y value looks crazy!
 //            colorMap.getPixelsRef().setColor((int)(currentColor.getBrightness() * 255), i, currentColor);
 //        }
 //    }
+    
+    for (int i = 0; i < colorMap.getHeight(); ++i) {
+        //columns
+        for (int j = 0; j < colorMap.getWidth(); ++j) {
+            ofFloatColor currentColor = forest.getColor(j, i);
+            //the y value below could be 0, but adding a y value looks crazy!
+            colorMap.getPixelsRef().setColor((int)(currentColor.getBrightness() * 255), i, currentColor);
+        }
+    }
     
     colorMap.reloadTexture();
 }
