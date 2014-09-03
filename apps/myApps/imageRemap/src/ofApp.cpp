@@ -76,6 +76,15 @@ void ofApp::update(){
         }
     }
     
+//    for (int i = 0; i < colorMap.getHeight(); ++i) {
+//        //columns
+//        for (int j = 0; j < colorMap.getWidth(); ++j) {
+//            ofFloatColor currentColor = forest.getColor(j, i);
+//            //the y value below could be 0, but adding a y value looks crazy!
+//            colorMap.getPixelsRef().setColor((int)(currentColor.getBrightness() * 255), i, currentColor);
+//        }
+//    }
+    
     colorMap.reloadTexture();
 }
 
@@ -85,7 +94,7 @@ void ofApp::draw(){
     //    the webcam
     vidGrabber.getTextureReference().bind();
     shader.begin();
-    shader.setUniformTexture("forest", forest.getTextureReference(), 1);
+    shader.setUniformTexture("vidGrabber", vidGrabber.getTextureReference(), 1);
     shader.setUniformTexture("mappedColors", colorMap.getTextureReference(), 2);
     
     quad.draw();

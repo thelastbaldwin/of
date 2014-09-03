@@ -2,7 +2,7 @@
 #version 410
 
 uniform sampler2DRect texture0;
-uniform sampler2DRect forest;	
+uniform sampler2DRect vidGrabber;	
 uniform sampler2DRect mappedColors;
 
 out vec4 outputColor;
@@ -24,7 +24,7 @@ void main(){
     //extract just the x and y values from the current fragmentCoordinates
     vec2 pos = vec2(gl_FragCoord.x, gl_FragCoord.y);
 
-    vec4 inputColor = texture(forest, pos);
+    vec4 inputColor = texture(vidGrabber, pos);
     int index = getBrightnessIndex(inputColor);
 
     outputColor = texture(mappedColors, vec2(index, 0));
