@@ -43,9 +43,12 @@ class ofApp : public ofBaseApp{
         ofxFloatSlider cameraX;
         ofxFloatSlider cameraY;
         ofxFloatSlider cameraZ;
+        ofxFloatSlider scrollSpeed;
         ofxToggle doFade;
         ofxToggle bWigout;
+        ofxToggle bDistortVideo;
         ofxFloatSlider opacity;
+        ofxColorSlider overlayColor;
         bool bHide;
         //if true, fade up
         bool bFade;
@@ -62,7 +65,8 @@ class ofApp : public ofBaseApp{
                 cameraX,
                 cameraY,
                 cameraZ,
-                opacity;
+                opacity,
+                scrollSpeed;
             int scanlineHeight;
         };
     

@@ -77,12 +77,14 @@ float snoise(vec2 v)
 uniform sampler2DRect texture0;
 uniform sampler2DRect video;
 uniform sampler2DRect scanlines;
-uniform sampler2DRect mappedColors;
+uniform vec4 globalColor;
 uniform float time; //Parameter which we will pass from OF
 uniform float amplitude;
 uniform float wavelength;
 uniform float speed;
 uniform float opacity;
+uniform float bDistortVideo;
+uniform float scrollSpeed;
 
 int getBrightnessIndex(vec4 inputColor){
   return int(dot(inputColor, vec4(0.25) * 255));
@@ -107,15 +109,22 @@ void main(){
     //shift with noise
     pos.x += amplitude * snoise(vec2(pos.y + time * speed, 0)/wavelength);
 
+    //320 is a hard-coded height for this application
+    pos.y = mod(pos.y + scrollSpeed * time, 320.0);
+
     vec4 scanlineColor = texture(scanlines, originalPos);
-    
+
     //get sample color from texture
     vec4 sampleColor = texture(texture0, pos);
     //remove a proportional amount of color based on the scanline texture color
     sampleColor.rgb = sampleColor.rgb - sampleColor.rgb * scanlineColor.a;
 
-    //color from video Texture
-    vec4 movieColor = texture(video, originalPos);
+    sampleColor = mix(sampleColor, globalColor, globalColor.a);
 
-    outputColor = vec4(sampleColor.rgb*opacity + movieColor.rgb*(1.0 - opacity), 1.0);
+    //color from video Texture
+    vec4 movieColor = texture(video, (bDistortVideo == 1.0)? pos : originalPos);
+
+    //using mix performs the same function as the commented line below
+    outputColor = vec4(mix(movieColor.rgb, sampleColor.rgb, opacity), 1.0);
+    //outputColor = vec4(sampleColor.rgb*opacity + movieColor.rgb*(1.0 - opacity), 1.0);
 }

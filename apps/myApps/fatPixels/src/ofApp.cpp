@@ -16,6 +16,7 @@ void ofApp::setup(){
     defaultSettings.cameraZ = -200;
     defaultSettings.opacity = 1.0;
     defaultSettings.scanlineHeight = 2;
+    defaultSettings.scrollSpeed = 0;
     
     //shader loading
     shader.load("shaders/shaderVert.c", "shaders/shaderFrag.c", "shaders/shaderGeometry.c");
@@ -60,10 +61,13 @@ void ofApp::setup(){
     gui.add(cameraX.setup("cameraX", defaultSettings.cameraX, -ofGetWidth()/2, ofGetWidth()));
     gui.add(cameraY.setup("cameraY", defaultSettings.cameraY, -ofGetHeight()/2, ofGetHeight()));
     gui.add(cameraZ.setup("cameraZ", defaultSettings.cameraZ, -100, -500));
+    gui.add(scrollSpeed.setup("scroll speed", defaultSettings.scrollSpeed, 0.0, 2000.0));
     gui.add(scanlineHeight.setup("scanline height", defaultSettings.scanlineHeight, 1, 20));
     gui.add(doFade.setup("enable fading", true));
     gui.add(opacity.setup("opacity", defaultSettings.opacity, 0.0, 1.0));
     gui.add(bWigout.setup("enable wigout", true));
+    gui.add(bDistortVideo.setup("distort video", false));
+    gui.add(overlayColor.setup("overlay color", ofFloatColor(0.0, 0.0, 0.0, 0.0), ofFloatColor(0.0, 0.0, 0.0, 0.0), ofFloatColor(1.0, 1.0, 1.0, 1.0)));
     
     bHide = true;
 	bFade = false;
@@ -97,6 +101,9 @@ void ofApp::update(){
         bFade = !bFade;
 		videoPlayer.setPosition(0.0);
         videoPlayer.play();
+        bDistortVideo = false;
+    }else if(videoPlayer.getPosition() > 0.85){
+        bDistortVideo = true;
     }
     
     if (prevScanlineHeight != scanlineHeight) {
@@ -159,6 +166,10 @@ void ofApp::draw(){
     wiggleShader.setUniform1f("speed", speed);
     wiggleShader.setUniform1i("scanlineHeight", scanlineHeight);
     wiggleShader.setUniform1f("opacity", opacity);
+    wiggleShader.setUniform1f("bDistortVideo", (bDistortVideo) ? 1.0 : 0.0);
+    wiggleShader.setUniform1f("scrollSpeed", scrollSpeed);
+    ofSetColor(overlayColor);
+    
     quad.draw();
     wiggleShader.end();
     
@@ -207,6 +218,11 @@ void ofApp::reset(){
     cameraY = defaultSettings.cameraY;
     cameraZ = defaultSettings.cameraZ;
     scanlineHeight = defaultSettings.scanlineHeight;
+    scrollSpeed = defaultSettings.scrollSpeed;
+    
+    if(ofGetScreenHeight() != 320 && ofGetScreenWidth() != 540){
+        ofSetWindowShape(540, 320);
+    }
 }
 
 void ofApp::shuffleSettings(){
@@ -217,6 +233,7 @@ void ofApp::shuffleSettings(){
     cameraX = ofRandom(180.0, 380.0);
     cameraY = ofRandom(100.0, 220.0);
     cameraZ = ofRandom(-200.0, -100.0);
+    scrollSpeed = ofRandom(100.0, 2000.0);
     
 }
 
