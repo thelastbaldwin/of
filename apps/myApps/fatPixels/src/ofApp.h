@@ -21,6 +21,8 @@ class ofApp : public ofBaseApp{
         void generateScanlineImage(ofImage& img, int scanLineHeight, float opacity = 0.2);
         void reset();
         void shuffleSettings();
+        void setupPointMesh(ofMesh& mesh, int divisionFactor);
+        void divisionFactorChanged(int & divisionFactor);
     
         //this needs to be a template class becuase of the ofxFloatSlider class
         template<typename T> void adjustOpacity(T& opacity);
@@ -34,21 +36,35 @@ class ofApp : public ofBaseApp{
         ofImage scanlineImage;
     
         ofxPanel gui;
-        ofxFloatSlider squareSize;
-        ofxFloatSlider wavelength;
-        ofxFloatSlider amplitude;
-        ofxIntSlider scanlineHeight;
+        ofXml settings;
+        ofParameterGroup parameters;
+    
+        //orientation settings
+        ofParameterGroup orientationSettings;
+        ofParameter<float> cameraX;
+        ofParameter<float> cameraY;
+        ofParameter<float> cameraZ;
+    
+        //distortion settings;
+        ofParameterGroup distortionSettings;
+        ofParameter<int> divisionFactor;
+        ofParameter<float> squareSize;
+        ofParameter<float> scrollSpeed;
+        ofParameter<float> wavelength;
+        ofParameter<float> amplitude;
+        ofParameter<float> speed;
+        ofParameter<float> opacity;
+        ofParameter<int> scanlineHeight;
+    
         int prevScanlineHeight;
-        ofxFloatSlider speed;
-        ofxFloatSlider cameraX;
-        ofxFloatSlider cameraY;
-        ofxFloatSlider cameraZ;
-        ofxFloatSlider scrollSpeed;
-        ofxToggle doFade;
-        ofxToggle bWigout;
-        ofxToggle bDistortVideo;
-        ofxFloatSlider opacity;
-        ofxColorSlider overlayColor;
+    
+        //flags
+        ofParameterGroup flagSettings;
+        ofParameter<bool> doFade;
+        ofParameter<bool> bWigout;
+        ofParameter<bool> bDistortVideo;
+    
+        ofParameter<ofColor> overlayColor;
         bool bHide;
         //if true, fade up
         bool bFade;

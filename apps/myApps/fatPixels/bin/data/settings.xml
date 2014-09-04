@@ -1,0 +1,23 @@
+<group>
+	<orientation>
+		<cameraX>280</cameraX>
+		<cameraY>160</cameraY>
+		<cameraZ>-200</cameraZ>
+	</orientation>
+	<distortion>
+		<division>4</division>
+		<square_size>4</square_size>
+		<speed>0</speed>
+		<scroll_speed>0</scroll_speed>
+		<wavelength>0.01</wavelength>
+		<amplitude>0.1</amplitude>
+		<opacity>1</opacity>
+		<scanline_height>2</scanline_height>
+	</distortion>
+	<flags>
+		<enable_fading>1</enable_fading>
+		<enable_wigout>1</enable_wigout>
+		<distort_video>0</distort_video>
+	</flags>
+	<overlay_color>0, 150, 0, 50</overlay_color>
+</group>
