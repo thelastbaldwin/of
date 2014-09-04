@@ -99,6 +99,8 @@ void ofApp::setup(){
     
     doWigout = false;
     targetTime = 0.0;
+    
+    ofSetWindowPosition(15, 50);
 }
 
 void ofApp::divisionFactorChanged(int & divisionFactor){
