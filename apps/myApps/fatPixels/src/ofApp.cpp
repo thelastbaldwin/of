@@ -77,7 +77,7 @@ void ofApp::setup(){
     mesh.setMode(OF_PRIMITIVE_POINTS);
     quad.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
     
-    bHide = true;
+    bHide = false;
 	bFade = false;
     
     cam.setPosition(ofGetWidth()/2, ofGetHeight()/2, cameraZ);
@@ -238,10 +238,6 @@ void ofApp::reset(){
     cameraZ = defaultSettings.cameraZ;
     scanlineHeight = defaultSettings.scanlineHeight;
     scrollSpeed = defaultSettings.scrollSpeed;
-    
-    if(ofGetScreenHeight() != 320 && ofGetScreenWidth() != 540){
-        ofSetWindowShape(540, 320);
-    }
 }
 
 void ofApp::shuffleSettings(){
