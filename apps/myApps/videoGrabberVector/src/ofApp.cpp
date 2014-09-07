@@ -46,7 +46,7 @@ void ofApp::draw(){
 	ofSetHexColor(0xffffff);
     int offset = 0;
     std::stringstream ss;
-f
+
 	/*for(auto cam: cams){
         cam.draw(offset * 320, 0);
         ++offset;
