@@ -18,10 +18,25 @@ void ofApp::setup(){
     //for (ofVideoDevice device: devices){
     for(int i = 0; i < devices.size(); ++i){
         if(devices[i].bAvailable){
-            cout << devices[i].id << " : " << devices[i].deviceName << endl;
+            //cout << devices[i].id << " : " << devices[i].deviceName << endl;
         }
     }
 
+    settings.load("settings.xml");
+    //settings.deserialize();
+
+    cout << settings.getValue() << endl;
+    cout << settings.getName() << endl;
+    cout << settings.getNumChildren() << endl;
+
+    cout << "camthread1" << settings.getValue("camthread1") << endl;
+    cout << "camthread2" << settings.getValue("camthread2") << endl;
+    cout << "maincam" << settings.getValue("maincam") << endl;
+
+    std::vector<int> cam1Ids = getCameraIds(settings.getValue("camthread1"));
+    std::vector<int cam2Ids = getCameraIds(settings.getValue("camthread2"));
+
+    //arbitrarily deciding camera 0 is the main cam
     std::vector<int> mainCameraIds;
     mainCameraIds.push_back(0);
     hMainCameraThread = new CamThread(mainCameraIds, 1024, 768);
@@ -71,6 +86,23 @@ void ofApp::update(){
 void ofApp::draw(){
 
 }
+
+ std::vector<int> ofApp::getCameraIds(std::string idString){
+    std::vector<string> cam1Addresses = ofSplitString(idString, " ");
+    std::vector<int> camIds;
+    std::stringstream ss;
+    int fromString;
+
+    std::for_each(cam1Addresses.begin(), cam1Addresses.end(), [&ss, &fromString, &camIds](string s){
+        ss << s;
+        ss >> fromString;
+        camIds.push_back(fromString);
+        ss.str("");
+        ss.clear();
+    });
+
+    return camIds;
+ }
 
 void ofApp::onGifSaved(string &fileName) {
     cout << "gif saved as " << fileName << endl;

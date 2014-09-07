@@ -25,24 +25,27 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
         void sendMessage(std::string filename, std::string id);
         std::string takeTraditionalPhoto(const string &fileName);
-    
+
+        std::vector<int> getCameraIds(std::string idString);
+
         void onGifSaved(string & fileName);
         void exit();
-    
+
         static const int SEND_PORT;
         static const int RECEIVE_PORT;
         static const std::string HOST;
-    
+
         ofxOscReceiver receiver;
         ofxOscSender sender;
-    
+
         ofVideoGrabber 		vidGrabber;
         ofxGifEncoder gifEncoder;
 //        ofxXmlSettings XML;
-    
+
         CamThread* hMainCameraThread;
-    
+
         ofSoundPlayer beep;
         ofSoundPlayer yeah;
-		
+
+		ofXml settings;
 };

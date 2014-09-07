@@ -1,19 +1,5 @@
-<PORT>12345</PORT>
-<HOST>localhost</HOST>
-<WIDTH>640</WIDTH>
-<HEIGHT>480</HEIGHT>
-<MAINCAMERA>0</MAINCAMERA>
-<WEBCAMESET>
-	<CAM>0</CAM>
-	<CAM>1</CAM>
-	<CAM>2</CAM>
-	<CAM>3</CAM>
-	<CAM>4</CAM>
-</WEBCAMESET>
-<WEBCAMSET>
-	<CAM>5</CAM>
-	<CAM>6</CAM>
-	<CAM>7</CAM>
-	<CAM>8</CAM>
-	<CAM>9</CAM>
-</WEBCAMSET>
+<settings>
+	<camthread1>2 3 5 6 0</camthread1>
+	<camthread2>1 4 7 8 9</camthread2>
+	<maincam>10</maincam>
+</settings>
