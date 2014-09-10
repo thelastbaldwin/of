@@ -188,8 +188,11 @@ void ofApp::draw(){
     wiggleShader.end();
     
     if( bHide ){
+        ofShowCursor();
 		gui.draw();
-	}
+	}else{
+        ofHideCursor();
+    }
 
     adjustOpacity(opacity);
 }
