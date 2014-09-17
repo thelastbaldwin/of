@@ -9,7 +9,7 @@ void ofApp::setup(){
     
     quadWidth = ofGetWidth() / columns;
     quadHeight = ofGetHeight() / rows;
-    padding = quadWidth * 0.5;
+    padding = quadWidth * 0.15;
     
     for (int i = 0; i < rows * columns; ++i) {
         //rotationOffset, amplitude
@@ -29,10 +29,19 @@ void ofApp::setup(){
     quad.addVertex(ofPoint(quadWidth + padding, 0, 0));
     quad.addTexCoord(ofPoint(quadWidth + padding, 0, 0));
     
+//    quad.addVertex(ofPoint(0 - (quadWidth + padding)/2, quadHeight + padding - (quadHeight + padding)/2, 0));
+//    quad.addTexCoord(ofPoint(0 - (quadWidth + padding)/2, quadHeight + padding - (quadHeight + padding)/2, 0));
+//    quad.addVertex(ofPoint(0 - (quadWidth + padding)/2, 0 - (quadHeight + padding)/2, 0));
+//    quad.addTexCoord(ofPoint(0 - (quadWidth + padding)/2, 0 - (quadHeight + padding)/2, 0));
+//    quad.addVertex(ofPoint(quadWidth + padding - (quadWidth + padding)/2, quadHeight + padding - (quadHeight + padding)/2, 0));
+//    quad.addTexCoord(ofPoint(quadWidth + padding - (quadWidth + padding)/2, quadHeight + padding - (quadHeight + padding)/2, 0));
+//    quad.addVertex(ofPoint(quadWidth + padding - (quadWidth + padding)/2, 0 - (quadHeight + padding)/2, 0));
+//    quad.addTexCoord(ofPoint(quadWidth + padding - (quadWidth + padding)/2, 0 - (quadHeight + padding)/2, 0));
+    
     quad.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
     
     //allocate memory for frame buffer object
-    fbo.allocate(ofGetWidth(), ofGetHeight());
+    fbo.allocate(quadWidth + padding, quadHeight + padding);
 }
 
 //--------------------------------------------------------------
@@ -42,16 +51,24 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    float speed = ofDist(0, 0, 0, ofGetMouseY()),
+    lineThickness = ofDist(0, 0, 0, ofGetMouseX());
+    
     //generate texture in FBO
     fbo.begin();
     textureShader.begin();
     textureShader.setUniform1f("time", time);
-    textureShader.setUniform1f("speed", ofDist(0, 0, 0, ofGetMouseY()));
-    textureShader.setUniform1f("lineThickness", ofDist(0, 0, 0, ofGetMouseX()));
+    textureShader.setUniform1f("speed", speed);
+    textureShader.setUniform1f("lineThickness", lineThickness);
     ofBackground(255, 0, 0);
+    ofPushMatrix();
+//    ofTranslate((quadWidth + padding)/2, (quadHeight + padding)/2, 0);
     quad.draw();
+    ofPopMatrix();
     textureShader.end();
     fbo.end();
+
+//    fbo.draw(0, 0);
     
     //create texture from FBO
     fbo.getTextureReference().bind();
@@ -66,6 +83,13 @@ void ofApp::draw(){
             ofPopMatrix();
         }
     }
+    
+    //ofSetColor(ofColor::black);
+    //ofFill();
+    std::stringstream ss;
+    
+    ss << "line width: " << lineThickness << ", speed: " << speed << endl;
+    ofDrawBitmapString(ss.str(), ofPoint(ofGetWidth() - 250, ofGetHeight() - 5));
 }
 
 //--------------------------------------------------------------

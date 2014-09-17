@@ -25,7 +25,7 @@ class ofApp : public ofBaseApp{
         ofMesh quad;
         ofFbo fbo;
         ofShader textureShader;
-        const int columns = 4, rows = 2;
+        const int columns = 15, rows =15;
     
         float time, padding;
     
@@ -35,7 +35,8 @@ class ofApp : public ofBaseApp{
             TrippyQuad(float _rotOffset, float _amplitude, float _speed);
         };
     
-        TrippyQuad trippyQuads[8];
+        //columns * rows
+        TrippyQuad trippyQuads[225];
         float quadWidth, quadHeight;
     
 };
