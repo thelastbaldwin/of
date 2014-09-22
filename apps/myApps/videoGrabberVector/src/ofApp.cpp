@@ -67,6 +67,14 @@ void ofApp::draw(){
 
 }
 
+void ofApp::printCamInfo(){
+    vector<ofVideoDevice> devices = vidGrabber.listDevices();
+
+    for(int i = 0; i < devices.size(); i++){
+		cout << devices[i].id << ": " << devices[i].deviceName;
+    }
+}
+
 
 //--------------------------------------------------------------
 void ofApp::keyPressed  (int key){
@@ -82,7 +90,7 @@ void ofApp::keyPressed  (int key){
     // For Xcode 4.4 and greater, see this forum post on instructions on installing the SDK
     // http://forum.openframeworks.cc/index.php?topic=10343
 	if (key == 's' || key == 'S'){
-		vidGrabber.videoSettings();
+		printCamInfo();
 	}
 
 

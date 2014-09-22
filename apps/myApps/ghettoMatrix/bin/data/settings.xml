@@ -1,5 +1,5 @@
 <settings>
-	<camthread1>2 3 5 6 0</camthread1>
-	<camthread2>1 4 7 8 9</camthread2>
-	<maincam>10</maincam>
+	<camthread1>3 0 9 6</camthread1>
+	<camthread2>7 4 5 8 1</camthread2>
+	<maincam>2</maincam>
 </settings>
