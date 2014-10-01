@@ -59,19 +59,10 @@ void ofApp::update(){
 
             if(type == "matrix"){
                 cout << "matrix requested" << endl;
-                //get all the camera pictures
-                //stitch together into gif
-                //send saved filename
-                //sendMessage("ohboy.gif", id);
-                std::string fileName = takeMatrixPhoto("matrix - " + ofGetTimestampString("%m%d%Y-%H%M%s") + ".gif");
-                sendMessage(fileName, id);
+                takeMatrixPhoto("matrix-" + ofGetTimestampString("%m%d%Y-%H%M%s") + "_" + id + ".gif");
             }else if(type == "traditional"){
                 cout << "traditional requested" << endl;
-                //take 4 photos
-                //compose into framebuffer object
-                //drop a sweet logo on the bottom
-                //profit
-                std::string fileName = takeTraditionalPhoto("traditional - " + ofGetTimestampString("%m%d%Y-%H%M%s") + ".jpg");
+                std::string fileName = takeTraditionalPhoto("traditional-" + ofGetTimestampString("%m%d%Y-%H%M%s") + ".jpg");
                 sendMessage(fileName, id);
             }
 
@@ -177,6 +168,12 @@ std::string ofApp::takeMatrixPhoto(const string& fileName){
 }
 
 void ofApp::onGifSaved(string &fileName) {
+    //extract id out of filename
+    int underscorePos = fileName.find("_");
+    int dotPos = fileName.find(".gif");
+    std::string id = fileName.substr(underscorePos + 1, dotPos - underscorePos - 1);
+    sendMessage(fileName, id);
+    cout << "gif sent to" << id << endl;
     cout << "gif saved as " << fileName << endl;
 }
 
@@ -230,6 +227,7 @@ void ofApp::gotMessage(ofMessage msg){
 }
 
 void ofApp::sendMessage(std::string filename, std::string id){
+    cout << "trying to send " << filename << " to " << id << endl;
     ofxOscMessage m;
 	m.setAddress("/transmit/photo");
 	m.addStringArg(filename);
