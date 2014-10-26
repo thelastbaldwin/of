@@ -3,8 +3,9 @@
 //TODO: load these from XML settings
 const int ofApp::SEND_PORT = 12346;
 const int ofApp::RECEIVE_PORT = 12345;
-const int ofApp::NUM_MATRIX_FRAMES = 9;
+const int ofApp::NUM_MATRIX_FRAMES = 10;
 const std::string ofApp::HOST = "localhost";
+const std::string OUTPUT_PATH = "output/";
 
 
 //--------------------------------------------------------------
@@ -13,6 +14,8 @@ void ofApp::setup(){
     receiver.setup(RECEIVE_PORT);
 
     settings.load("settings.xml");
+
+    qrcode.loadImage("qrcode.png");
 
     cout << settings.getValue() << endl;
     cout << settings.getName() << endl;
@@ -74,7 +77,9 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-
+ofBackground(ofColor::white);
+ofRect(0, 0, ofGetWidth(), ofGetHeight());
+    qrcode.draw(0, 0);
 }
 
  std::vector<int> ofApp::getCameraIds(std::string idString){
@@ -138,7 +143,7 @@ std::string ofApp::takeTraditionalPhoto(const string& fileName){
     finalImage.allocate(1024 * 2, 768 * 2, OF_IMAGE_COLOR);
     fbo.readToPixels(finalImage.getPixelsRef());
     finalImage.reloadTexture();
-    finalImage.saveImage(fileName);
+    finalImage.saveImage(OUTPUT_PATH + fileName);
     return fileName;
 }
 
@@ -163,7 +168,7 @@ std::string ofApp::takeMatrixPhoto(const string& fileName){
     });
     hCamThread2->unlock();
 
-    gifEncoder.save(fileName);
+    gifEncoder.save(OUTPUT_PATH + fileName);
     return fileName;
 }
 

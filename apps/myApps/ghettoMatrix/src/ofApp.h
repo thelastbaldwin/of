@@ -37,7 +37,10 @@ class ofApp : public ofBaseApp{
         static const int SEND_PORT;
         static const int RECEIVE_PORT;
         static const std::string HOST;
+        static const std::string OUTPUT_PATH;
         static const int NUM_MATRIX_FRAMES;
+
+        ofImage qrcode;
 
         ofxOscReceiver receiver;
         ofxOscSender sender;

@@ -3,3 +3,29 @@
 
 /* IMPORT 12 COLUMN RESPONSIVE GS */
 @import url("responsive.gs.12col.css");
+
+body{
+	background: #7A86AD;
+}
+
+button{
+	font-size: 2em;
+	font-weight: bold;
+	padding: 2em;
+	border-radius: 1em;
+	border: 2px solid;
+}
+
+button[value="matrix"]{
+	background: #4E9231;
+	color: #A8DB92;
+	border-color: #A8DB92;
+}
+
+button[value="traditional"]{
+	background: #AA6A39;
+	color: #FFCFAA;
+	border-color: #FFCFAA;
+}
+
+/*TODO:  add in responsive font-size*/

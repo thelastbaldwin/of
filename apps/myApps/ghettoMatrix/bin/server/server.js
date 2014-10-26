@@ -5,6 +5,8 @@ var express = require('express'),
 	io = require('socket.io')(http),
 	dgram = require('dgram'),
 	osc = require('osc-min'),
+	os = require('os'),
+	ifaces = os.networkInterfaces(),
 	// osc is a thin layer on top of udp
 	sendSocket = dgram.createSocket('udp4'),
 	recieveSocket = dgram.createSocket('udp4'),
@@ -60,7 +62,7 @@ recieveSocket.on('message', function(message, remote){
 app.use("/js", express.static(__dirname + '/js'));
 app.use("/css", express.static(__dirname + '/css'));
 //this should be the data folder for the oF app
-app.use("/img", express.static(__dirname + '/../data'));
+app.use("/img", express.static(__dirname + '/../data/output'));
 
 
 
@@ -83,5 +85,15 @@ app.get('/', function(req, res){
 });
 
 http.listen(3000, function() {
-    console.log('Listening on port', http.address().port);
+	console.log('Listening on port', http.address().port);
+
+	for (var dev in ifaces) {
+		var alias=0;
+		ifaces[dev].forEach(function(details){
+			if (details.family=='IPv4') {
+				console.log(dev+(alias?':'+alias:''),details.address);
+				++alias;
+			}
+		});
+	}
 });
