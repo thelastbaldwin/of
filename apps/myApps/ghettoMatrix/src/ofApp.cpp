@@ -5,7 +5,7 @@ const int ofApp::SEND_PORT = 12346;
 const int ofApp::RECEIVE_PORT = 12345;
 const int ofApp::NUM_MATRIX_FRAMES = 10;
 const std::string ofApp::HOST = "localhost";
-const std::string OUTPUT_PATH = "output/";
+const std::string ofApp::OUTPUT_PATH = "output/";
 
 
 //--------------------------------------------------------------
@@ -176,8 +176,10 @@ void ofApp::onGifSaved(string &fileName) {
     //extract id out of filename
     int underscorePos = fileName.find("_");
     int dotPos = fileName.find(".gif");
+    int slashPos = fileName.find("/");
+    std::string parsedFilename = fileName.substr(slashPos + 1, fileName.size() - 1);
     std::string id = fileName.substr(underscorePos + 1, dotPos - underscorePos - 1);
-    sendMessage(fileName, id);
+    sendMessage(parsedFilename, id);
     cout << "gif sent to" << id << endl;
     cout << "gif saved as " << fileName << endl;
 }

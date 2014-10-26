@@ -1,7 +1,7 @@
 var socket = io();
 var container = document.getElementsByClassName('container')[0];
 var img = document.getElementsByTagName('img')[0];
-var IMGPATH = 'img/output/';
+var IMGPATH = 'img/';
 
 // DOM events
 container.addEventListener('click', function(e){
