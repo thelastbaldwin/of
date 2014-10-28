@@ -15,6 +15,8 @@ void ofApp::setup(){
 
     settings.load("settings.xml");
 
+    shader.load("shader/shaderVert.c","shader/shaderFrag.c");
+
     qrcode.loadImage("qrcode.png");
 
     std::vector<int> cam1Ids = getCameraIds(settings.getValue("camthread1"));
@@ -89,7 +91,13 @@ ofBackground(ofColor::white);
 
 
 if(dir.size() > 0){
-    animals[currentAnimal].getTextureReference().draw(ofGetWidth()/2 - animals[currentAnimal].width/2, ofGetHeight()/2 - animals[currentAnimal].height/2);
+    animals[currentAnimal].getTextureReference().bind();
+    shader.begin();
+    float time = ofGetElapsedTimef()/10;
+    shader.setUniform1f("time", time);
+    animals[currentAnimal].draw(ofGetWidth()/2 - animals[currentAnimal].width/2, ofGetHeight()/2 - animals[currentAnimal].height/2);
+    shader.end();
+    animals[currentAnimal].getTextureReference().unbind();
 }
     qrcode.draw(0, 0);
 }

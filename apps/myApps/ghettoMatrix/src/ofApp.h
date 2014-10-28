@@ -46,6 +46,8 @@ class ofApp : public ofBaseApp{
 		vector<ofImage> animals;
 		int currentAnimal;
 
+		ofShader shader;
+
         ofxOscReceiver receiver;
         ofxOscSender sender;
 
