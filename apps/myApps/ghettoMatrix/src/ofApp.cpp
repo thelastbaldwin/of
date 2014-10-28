@@ -16,6 +16,7 @@ void ofApp::setup(){
     settings.load("settings.xml");
 
     shader.load("shader/shaderVert.c","shader/shaderFrag.c");
+    fbo.allocate(ofGetWidth(), ofGetHeight());
 
     qrcode.loadImage("qrcode.png");
 
@@ -55,6 +56,7 @@ void ofApp::setup(){
 	for(int i = 0; i < (int)dir.size(); i++){
 		animals[i].loadImage(dir.getPath(i));
 	}
+
 	currentAnimal = 0;
 }
 
@@ -87,17 +89,21 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-ofBackground(ofColor::white);
 
 
 if(dir.size() > 0){
-    animals[currentAnimal].getTextureReference().bind();
+    fbo.begin();
+    ofBackground(ofColor::white);
+    animals[currentAnimal].setAnchorPoint(animals[currentAnimal].width/2, animals[currentAnimal].height/2);
+    animals[currentAnimal].draw(ofGetWidth()/2, ofGetHeight()/2);
+    fbo.end();
     shader.begin();
-    float time = ofGetElapsedTimef()/10;
+    float time = ofGetElapsedTimef()/2;
     shader.setUniform1f("time", time);
-    animals[currentAnimal].draw(ofGetWidth()/2 - animals[currentAnimal].width/2, ofGetHeight()/2 - animals[currentAnimal].height/2);
+
+    fbo.draw(0, 0);
+
     shader.end();
-    animals[currentAnimal].getTextureReference().unbind();
 }
     qrcode.draw(0, 0);
 }

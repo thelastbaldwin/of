@@ -47,6 +47,7 @@ class ofApp : public ofBaseApp{
 		int currentAnimal;
 
 		ofShader shader;
+		ofFbo fbo;
 
         ofxOscReceiver receiver;
         ofxOscSender sender;
