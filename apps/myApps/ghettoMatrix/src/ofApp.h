@@ -42,6 +42,10 @@ class ofApp : public ofBaseApp{
 
         ofImage qrcode;
 
+        ofDirectory dir;
+		vector<ofImage> animals;
+		int currentAnimal;
+
         ofxOscReceiver receiver;
         ofxOscSender sender;
 

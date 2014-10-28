@@ -17,14 +17,6 @@ void ofApp::setup(){
 
     qrcode.loadImage("qrcode.png");
 
-    cout << settings.getValue() << endl;
-    cout << settings.getName() << endl;
-    cout << settings.getNumChildren() << endl;
-
-    cout << "camthread1: " << settings.getValue("camthread1") << endl;
-    cout << "camthread2: " << settings.getValue("camthread2") << endl;
-    cout << "maincam" << settings.getValue("maincam") << endl;
-
     std::vector<int> cam1Ids = getCameraIds(settings.getValue("camthread1"));
     hCamThread1 = new CamThread(cam1Ids, 320, 240);
     hCamThread1->startThread();
@@ -37,6 +29,7 @@ void ofApp::setup(){
     hMainCameraThread = new CamThread(mainCameraIds, 1024, 768);
     hMainCameraThread->startThread();
 
+    //TODO: UPDATE SOUNDS
     beep.loadSound("short_beep.wav");
     beep.setMultiPlay(false);
     yeah.loadSound("short_yeah.ogg");
@@ -46,6 +39,21 @@ void ofApp::setup(){
     gifEncoder.start();
 
     ofAddListener(ofxGifEncoder::OFX_GIF_SAVE_FINISHED, this, &ofApp::onGifSaved);
+
+    //animal pictures
+    dir.listDir("animals/");
+    dir.sort();
+
+    //allocate the vector to have as many ofImages as files
+    if( dir.size() > 0){
+		animals.assign(dir.size(), ofImage());
+	}
+
+	// you can now iterate through the files and load them into the ofImage vector
+	for(int i = 0; i < (int)dir.size(); i++){
+		animals[i].loadImage(dir.getPath(i));
+	}
+	currentAnimal = 0;
 }
 
 //--------------------------------------------------------------
@@ -78,7 +86,11 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
 ofBackground(ofColor::white);
-ofRect(0, 0, ofGetWidth(), ofGetHeight());
+
+
+if(dir.size() > 0){
+    animals[currentAnimal].getTextureReference().draw(ofGetWidth()/2 - animals[currentAnimal].width/2, ofGetHeight()/2 - animals[currentAnimal].height/2);
+}
     qrcode.draw(0, 0);
 }
 
@@ -144,6 +156,10 @@ std::string ofApp::takeTraditionalPhoto(const string& fileName){
     fbo.readToPixels(finalImage.getPixelsRef());
     finalImage.reloadTexture();
     finalImage.saveImage(OUTPUT_PATH + fileName);
+
+    currentAnimal++;
+    currentAnimal %= animals.size();
+
     return fileName;
 }
 
@@ -169,6 +185,10 @@ std::string ofApp::takeMatrixPhoto(const string& fileName){
     hCamThread2->unlock();
 
     gifEncoder.save(OUTPUT_PATH + fileName);
+
+    currentAnimal++;
+    currentAnimal %= animals.size();
+
     return fileName;
 }
 
@@ -187,7 +207,7 @@ void ofApp::onGifSaved(string &fileName) {
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     //just for testing, but might be useful for MANUAL OVERRIDE
-    if(key == ' '){
+    if(key == 't'){
         cout << "space pressed" << endl;
         takeTraditionalPhoto("traditional - " + ofGetTimestampString("%m%d%Y-%H%M%s") + ".jpg");
     }
@@ -195,7 +215,14 @@ void ofApp::keyPressed(int key){
         cout << "m pressed" << endl;
         takeMatrixPhoto("matrix - " + ofGetTimestampString("%m%d%Y-%H%M%s") + ".gif");
     }
-
+    if(key == OF_KEY_LEFT){
+        currentAnimal--;
+        currentAnimal %= animals.size();
+    }
+    if(key == OF_KEY_RIGHT){
+        currentAnimal++;
+        currentAnimal %= animals.size();
+    }
 }
 
 //--------------------------------------------------------------
