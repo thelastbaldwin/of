@@ -11,9 +11,11 @@ body{
 button{
 	font-size: 2em;
 	font-weight: bold;
-	padding: 2em;
+	padding: 1.25em;
 	border-radius: 1em;
 	border: 2px solid;
+	margin-top: 0.25em;
+	margin-bottom: 0.25em;
 }
 
 button[value="matrix"]{
@@ -22,10 +24,16 @@ button[value="matrix"]{
 	border-color: #A8DB92;
 }
 
+button[value="matrix"]:active{
+	background: #1F4B00;
+}
+
 button[value="traditional"]{
 	background: #AA6A39;
 	color: #FFCFAA;
 	border-color: #FFCFAA;
 }
 
-/*TODO:  add in responsive font-size*/
+button[value="traditional"]:active{
+	background: #551A00;
+}
