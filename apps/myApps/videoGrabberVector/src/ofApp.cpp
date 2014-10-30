@@ -53,10 +53,10 @@ void ofApp::draw(){
     }*/
     for(int i = 0; i < cams.size(); ++i){
     ss << i;
-        cams[i].draw((i % 5) * 320, floor(i/5) * 240);
-        ofDrawBitmapString(ss.str(), (i % 5) * 320, floor(i/5) * 240 + 10);
-        ofLine((i%5) * 320 + 160-10, floor(i/5) * 240 + 120 - 10, (i%5) * 320 + 160+10, floor(i/5) * 240 + 120+10);
-        ofLine((i%5) * 320 + 160+10, floor(i/5) * 240 + 120 - 10, (i%5) * 320 + 160-10, floor(i/5) * 240 + 120+10);
+        cams[i].draw((i % 4) * 320, floor(i/4) * 240);
+        ofDrawBitmapString(ss.str(), (i % 4) * 320, floor(i/4) * 240 + 10);
+        ofLine((i%4) * 320 + 160-10, floor(i/4) * 240 + 120 - 10, (i%4) * 320 + 160+10, floor(i/4) * 240 + 120+10);
+        ofLine((i%4) * 320 + 160+10, floor(i/4) * 240 + 120 - 10, (i%4) * 320 + 160-10, floor(i/4) * 240 + 120+10);
         ss.str("");
     }
 
