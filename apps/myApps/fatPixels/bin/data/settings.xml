@@ -11,12 +11,12 @@
 		<scroll_speed>0</scroll_speed>
 		<wavelength>0.01</wavelength>
 		<amplitude>0.1</amplitude>
-		<opacity>1</opacity>
+		<opacity>0</opacity>
 		<scanline_height>2</scanline_height>
 	</distortion>
 	<flags>
-		<enable_fading>1</enable_fading>
-		<enable_wigout>1</enable_wigout>
+		<enable_fading>0</enable_fading>
+		<enable_wigout>0</enable_wigout>
 		<distort_video>0</distort_video>
 	</flags>
 	<overlay_color>0, 150, 0, 50</overlay_color>

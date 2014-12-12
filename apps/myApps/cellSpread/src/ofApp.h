@@ -2,8 +2,6 @@
 
 #include "ofMain.h"
 
-
-
 class ofApp : public ofBaseApp{
 
 	public:
@@ -20,23 +18,7 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+    
+        ofImage tile;
 		
-    
-        ofMesh quad;
-        ofFbo fbo;
-        ofShader textureShader;
-        const int columns = 4, rows = 4;
-    
-        float time, padding;
-    
-        struct TrippyQuad{
-            float rotOffset, amplitude, speed;
-            TrippyQuad();
-            TrippyQuad(float _rotOffset, float _amplitude, float _speed);
-        };
-    
-        //columns * rows
-        TrippyQuad trippyQuads[16];
-        float quadWidth, quadHeight;
-    
 };

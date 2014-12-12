@@ -90,6 +90,8 @@ void ofApp::draw(){
     
     ss << "line width: " << lineThickness << ", speed: " << speed << endl;
     ofDrawBitmapString(ss.str(), ofPoint(ofGetWidth() - 250, ofGetHeight() - 5));
+    
+    ofSetWindowPosition(0, 0);
 }
 
 //--------------------------------------------------------------
