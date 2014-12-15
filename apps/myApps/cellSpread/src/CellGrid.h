@@ -8,18 +8,22 @@
 
 #pragma once
 #include <vector>
-#include <Cell.h>
+#include <map>
+#include "Cell.h"
 
-class CellGrid{
-public:
-    CellGrid(int _x, int _y, int _width, int _height, int _cellSize);
-    
-    int getX();
-    int getY();
-    int getWidth();
-    int getHeight();
-    
-private:
-    int x, y, width, height, cellSize;
-    std::vector< std::vector<Cell> > Cells;
-};
+namespace Virus{
+    class CellGrid{
+    public:
+        CellGrid();
+        CellGrid(int _x, int _y, int _width, int _height, int _cellSize);
+        
+        int getX();
+        int getY();
+        int getWidth();
+        int getHeight();
+        
+    private:
+        int x, y, width, height, cellSize;
+        std::map<Point, Cell> cells;
+    };
+}

@@ -9,17 +9,41 @@
 #pragma once
 
 #include <vector>
-#include "CellGrid.h"
+//can't use ofPoint.h because of issues with map
 
-class Cell{
-public:
-    Cell(int _x, int _y, CellGrid* parent);
-    void flip();
+//forward declaration
+namespace Virus{
+    class CellGrid;
+}
+
+namespace Virus{
+    struct Point{
+        Point(int _x, int _y):x(_x),y(_y){};
+        int x, y;
+        
+        bool operator < (const Virus::Point& rhs) const{
+            if(this->y < rhs.y){
+                return true;
+            }else if(this->y == rhs.y && this->x < rhs.x){
+                return true;
+            }
+            return false;
+        };
+        
+    };
     
-private:
-    int x;
-    int y;
-    bool isActive;
-    //vector of pointers to cell. This will allow direct operations on neighbors
-    std::vector<Cell*> neighbors;
-};
+    class Cell{
+        friend class CellGrid;
+    public:
+        Cell(int _x, int _y);
+        void flip();
+        void setState(bool state);
+        void calculateNeighbors(int gridWidth, int gridHeight);
+        
+    private:
+        Point position;
+        bool isActive;
+        std::vector<Point> neighbors;
+    };
+
+}
