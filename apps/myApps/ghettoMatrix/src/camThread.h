@@ -30,7 +30,7 @@ public:
 
         }
     }
-
+private:
     void threadedFunction(){
         while( isThreadRunning()){
             for (int i = 0; i < vidGrabbers.size(); ++i){

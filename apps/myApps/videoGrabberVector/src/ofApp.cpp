@@ -53,18 +53,22 @@ void ofApp::draw(){
     }*/
     for(int i = 0; i < cams.size(); ++i){
     ss << i;
-        if(i < 5){
-            cams[i].draw((i % 5) * 320, 0);
-            ofDrawBitmapString(ss.str(), (i % 5) * 320, 0 + 10);
-        }
-        else{
-            cams[i].draw((i % 5) * 320, 240);
-            ofDrawBitmapString(ss.str(), (i % 5) * 320, 240 + 10);
-        }
+        cams[i].draw((i % 4) * 320, floor(i/4) * 240);
+        ofDrawBitmapString(ss.str(), (i % 4) * 320, floor(i/4) * 240 + 10);
+        ofLine((i%4) * 320 + 160-10, floor(i/4) * 240 + 120 - 10, (i%4) * 320 + 160+10, floor(i/4) * 240 + 120+10);
+        ofLine((i%4) * 320 + 160+10, floor(i/4) * 240 + 120 - 10, (i%4) * 320 + 160-10, floor(i/4) * 240 + 120+10);
         ss.str("");
     }
 
 
+}
+
+void ofApp::printCamInfo(){
+    vector<ofVideoDevice> devices = vidGrabber.listDevices();
+
+    for(int i = 0; i < devices.size(); i++){
+		cout << devices[i].id << ": " << devices[i].deviceName;
+    }
 }
 
 
@@ -82,7 +86,7 @@ void ofApp::keyPressed  (int key){
     // For Xcode 4.4 and greater, see this forum post on instructions on installing the SDK
     // http://forum.openframeworks.cc/index.php?topic=10343
 	if (key == 's' || key == 'S'){
-		vidGrabber.videoSettings();
+		printCamInfo();
 	}
 
 
