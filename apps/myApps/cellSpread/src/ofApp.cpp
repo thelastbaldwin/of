@@ -6,6 +6,10 @@ void ofApp::setup(){
     
     tile.loadImage("houndstooth.jpg");
     tile.resize(100, 100);
+    
+    cg = Virus::CellGrid(5, 5, 5, 5, 5);
+    
+    std::cout << cg;
 }
 
 //--------------------------------------------------------------

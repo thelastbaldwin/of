@@ -7,7 +7,6 @@
 //
 
 #pragma once
-#include <vector>
 #include <map>
 #include "Cell.h"
 
@@ -21,6 +20,8 @@ namespace Virus{
         int getY();
         int getWidth();
         int getHeight();
+        
+        friend std::ostream& operator << (std::ostream& os, const Virus::CellGrid& cellGrid);
         
     private:
         int x, y, width, height, cellSize;

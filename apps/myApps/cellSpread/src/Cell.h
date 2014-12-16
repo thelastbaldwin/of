@@ -9,6 +9,7 @@
 #pragma once
 
 #include <vector>
+#include <iostream>
 //can't use ofPoint.h because of issues with map
 
 //forward declaration
@@ -17,6 +18,7 @@ namespace Virus{
 }
 
 namespace Virus{
+    //ofPoint doesn't have a < operation which is necessary for the cellGrid map
     struct Point{
         Point(int _x, int _y):x(_x),y(_y){};
         int x, y;
@@ -33,12 +35,14 @@ namespace Virus{
     };
     
     class Cell{
-        friend class CellGrid;
     public:
         Cell(int _x, int _y);
         void flip();
         void setState(bool state);
         void calculateNeighbors(int gridWidth, int gridHeight);
+        
+        friend std::ostream& operator << (std::ostream& os, const Virus::Cell& cell);
+        friend class CellGrid;
         
     private:
         Point position;
@@ -46,4 +50,5 @@ namespace Virus{
         std::vector<Point> neighbors;
     };
 
+    std::ostream& operator << (std::ostream& os, const Virus::Cell& cell);
 }

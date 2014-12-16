@@ -21,4 +21,5 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
     
         ofImage tile;
+        Virus::CellGrid cg;
 };
