@@ -10,6 +10,7 @@
 
 namespace Virus{
 
+    Cell::Cell(): isActive(false), position(Point(0, 0)){};
     Cell::Cell(int _x, int _y): isActive(false), position(Point(_x,_y)){};
 
     void Cell::flip(){
@@ -27,10 +28,18 @@ namespace Virus{
         //    x , x, x
         for(int row = position.y - 1; row <= position.y + 1; ++row){
             for(int column = position.x - 1; column <= position.x + 1; ++column){
-                    neighbors.push_back(Point(column, row));
+                if(!(column < 0) && !(row < 0) && column < gridWidth && row < gridHeight && !(position.x == column && position.y == row)){
+                    Point p(column, row);
+                    neighbors.push_back(p);
+                }
             }
         }
     }
+    
+    std::ostream& operator << (std::ostream& os, const Point& p){
+        os << p.x << ", " << p.y;
+        return os;
+    };
 
     std::ostream& operator << (std::ostream& os, const Virus::Cell& cell){
         os << "Location: " << cell.position.x << ", " << cell.position.y <<
@@ -40,7 +49,7 @@ namespace Virus{
             if(it != cell.neighbors.begin()){
                 os << ", ";
             }
-            os << "(" << cell.position.x << ", " << cell.position.y << ")";
+            os << "(" << *it << ")";
         }
         os << "\n";
         return os;

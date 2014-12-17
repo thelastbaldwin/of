@@ -7,9 +7,7 @@ void ofApp::setup(){
     tile.loadImage("houndstooth.jpg");
     tile.resize(100, 100);
     
-    cg = Virus::CellGrid(5, 5, 5, 5, 5);
-    
-    std::cout << cg;
+    cellGrid = Virus::CellGrid(5, 5, 5, 5, 5);
 }
 
 //--------------------------------------------------------------
@@ -24,6 +22,7 @@ void ofApp::draw(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
+    std::cout << cellGrid.getRandomCell() << std::endl;
 
 }
 

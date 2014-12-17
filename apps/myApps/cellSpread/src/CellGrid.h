@@ -8,6 +8,7 @@
 
 #pragma once
 #include <map>
+#include "ofMain.h"
 #include "Cell.h"
 
 namespace Virus{
@@ -20,11 +21,19 @@ namespace Virus{
         int getY();
         int getWidth();
         int getHeight();
+        int getCellSize();
+        
+        Cell getRandomCell();
         
         friend std::ostream& operator << (std::ostream& os, const Virus::CellGrid& cellGrid);
         
+        //return the latest additions to the spread
+        std::vector<Point> spread();
+        
     private:
+        bool isSpreading;
         int x, y, width, height, cellSize;
         std::map<Point, Cell> cells;
+        std::vector<Point> activeSet;
     };
 }
