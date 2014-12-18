@@ -39,6 +39,7 @@ namespace Virus{
     
     void CellGrid::changeDirection(){
         activeSet.clear();
+        activeSet.resize(0);
         isSpreading = !isSpreading;
     };
     
@@ -48,15 +49,17 @@ namespace Virus{
     
     void CellGrid::spread(){
         if(getRemainingCellCount() > 0){
+            std::cout << activeSet.size() << "\n";
             if(activeSet.size() == 0){
+                //random seed
                 Cell rCell = getRandomCell();
                 rCell.flip();
                 activeSet.push_back(rCell.position);
             }else{
-                for(auto it = activeSet.begin(); it != activeSet.end(); ++it){
+                for(int i = 0, size = activeSet.size(); i < size; ++i){
                     std::vector<Point> neighbors;
                     
-                    for(auto pointIter = cells[*it].neighbors.begin(); pointIter != cells[*it].neighbors.end(); ++pointIter){
+                    for(auto pointIter = cells[activeSet[i]].neighbors.begin(); pointIter != cells[activeSet[i]].neighbors.end(); ++pointIter){
                         //add relevant neighbors to set depending on direction
                         if((isSpreading && !cells[*pointIter].isActive()) || (!isSpreading && cells[*pointIter].isActive())){
                             neighbors.push_back(*pointIter);
@@ -65,7 +68,7 @@ namespace Virus{
                     
                     //pick a random cell from the set
                     if(neighbors.size() > 0){
-                        int index = int(ofRandom (neighbors.size() + 1));
+                        int index = int(ofRandom (neighbors.size()));
                         Point nextActivePoint = neighbors[index];
                         cells[nextActivePoint].flip();
                         activeSet.push_back(nextActivePoint);

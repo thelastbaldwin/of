@@ -7,24 +7,26 @@ void ofApp::setup(){
     tile.loadImage("houndstooth.jpg");
     
     // int _x, int _y, int _width, int _height, int _cellSize, ofImage* tile
-    cellGrid = Virus::CellGrid(0, 0, 3, 3, 25, &tile);
+    cellGrid = Virus::CellGrid(30, 30, 80, 80, 10, &tile);
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
+    if(cellGrid.getRemainingCellCount() <= 0){
+        cellGrid.changeDirection();
+    }
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    ofBackground(201,201, 201);
     cellGrid.draw();
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
    cellGrid.spread();
-    std::cout << cellGrid.getRemainingCellCount() << std::endl;
-
+//    std::cout << cellGrid << std::endl;
 }
 
 //--------------------------------------------------------------

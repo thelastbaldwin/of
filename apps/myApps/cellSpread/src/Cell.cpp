@@ -47,6 +47,7 @@ namespace Virus{
 
     std::ostream& operator << (std::ostream& os, const Virus::Cell& cell){
         os << "Location: " << cell.position.x << ", " << cell.position.y <<
+        "\nStatus: " << ((cell.bActive) ? "active" : "inactive") <<
         "\nNeighbors[" << cell.neighbors.size() << "]: " << std::endl;
         
         for(auto it = cell.neighbors.begin(); it != cell.neighbors.end(); ++it){

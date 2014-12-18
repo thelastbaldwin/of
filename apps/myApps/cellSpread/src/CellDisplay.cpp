@@ -19,7 +19,7 @@ namespace Virus{
     void CellDisplay::draw(std::map<Point, Cell>::const_iterator begin, std::map<Point, Cell>::const_iterator end) const{
         for(auto it = begin; it != end; ++it){
             if(it->second.isActive()){
-                tile->draw(x + it->first.x * cellSize,y + it->first.y * cellSize);
+                tile->draw(x + it->first.x * cellSize, y + it->first.y * cellSize);
             }
         }
     }
