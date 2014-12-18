@@ -37,38 +37,41 @@ namespace Virus{
         return cells[Point(randX, randY)];
     };
     
+    void CellGrid::changeDirection(){
+        activeSet.clear();
+        isSpreading = !isSpreading;
+    };
+    
+    int CellGrid::getRemainingCellCount() const{
+        return width * height - activeSet.size();
+    };
+    
     void CellGrid::spread(){
-        //determine next generation depending on isSpreading
-        if(isSpreading){
-            //spreading
+        if(getRemainingCellCount() > 0){
             if(activeSet.size() == 0){
                 Cell rCell = getRandomCell();
                 rCell.flip();
                 activeSet.push_back(rCell.position);
             }else{
-                for(auto it = cells.begin(); it != cells.end();++it){
-                    //copy all neighbor cells that are inactive
-                    std::vector<Cell> inactiveNeighbors;
-                    for(auto pointIter = it->second.neighbors.begin(); pointIter != it->second.neighbors.end(); ++pointIter){
-                        //add inactive neighbors to set
-                        if(!cells[it->first].isActive()){
-                            inactiveNeighbors.push_back(it->second);
+                for(auto it = activeSet.begin(); it != activeSet.end(); ++it){
+                    std::vector<Point> neighbors;
+                    
+                    for(auto pointIter = cells[*it].neighbors.begin(); pointIter != cells[*it].neighbors.end(); ++pointIter){
+                        //add relevant neighbors to set depending on direction
+                        if((isSpreading && !cells[*pointIter].isActive()) || (!isSpreading && cells[*pointIter].isActive())){
+                            neighbors.push_back(*pointIter);
                         }
                     }
                     
-                    //pick a random inactive cell
-                    if(inactiveNeighbors.size() > 0){
-                        int index = int(ofRandom(inactiveNeighbors.size() + 1));
-                        Point nextActivePoint = inactiveNeighbors[index].position;
+                    //pick a random cell from the set
+                    if(neighbors.size() > 0){
+                        int index = int(ofRandom (neighbors.size() + 1));
+                        Point nextActivePoint = neighbors[index];
                         cells[nextActivePoint].flip();
                         activeSet.push_back(nextActivePoint);
-                        
                     }
-                    //add that to the active set
                 }
             }
-        }else{
-            //contracting
         }
     };
     

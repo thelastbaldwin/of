@@ -25,9 +25,13 @@ namespace Virus{
         //draws the grid, calling CellDisplay.draw
         void draw();
         
+        int getRemainingCellCount() const;
+        
         //return the latest additions to the spread
         void spread();
+        void changeDirection();
         friend std::ostream& operator << (std::ostream& os, const Virus::CellGrid& cellGrid);
+
         
     private:
         int width, height;
@@ -36,6 +40,4 @@ namespace Virus{
         std::map<Point, Cell> cells;
         std::vector<Point> activeSet;
     };
-    
-    bool isActiveCell(const Point p);
 }
