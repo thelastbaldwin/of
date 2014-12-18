@@ -10,14 +10,12 @@
 
 #include <vector>
 #include <iostream>
-//can't use ofPoint.h because of issues with map
+//can't use ofPoint.h because of issues with map and < operator
 
-//forward declaration
 namespace Virus{
+    //forward declaration
     class CellGrid;
-}
-
-namespace Virus{
+    
     //ofPoint doesn't have a < operation which is necessary for the cellGrid map
     struct Point{
         Point():x(0),y(0){};
@@ -49,9 +47,11 @@ namespace Virus{
         friend std::ostream& operator << (std::ostream& os, const Cell& cell);
         friend class CellGrid;
         
+        bool isActive() const;
+        
     private:
         Point position;
-        bool isActive;
+        bool bActive;
         std::vector<Point> neighbors;
     };
 

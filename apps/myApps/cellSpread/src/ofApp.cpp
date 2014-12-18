@@ -5,9 +5,9 @@ void ofApp::setup(){
     ofSetVerticalSync(true);
     
     tile.loadImage("houndstooth.jpg");
-    tile.resize(100, 100);
     
-    cellGrid = Virus::CellGrid(5, 5, 5, 5, 5);
+    // int _x, int _y, int _width, int _height, int _cellSize, ofImage* tile
+    cellGrid = Virus::CellGrid(0, 0, 25, 25, 25, &tile);
 }
 
 //--------------------------------------------------------------
@@ -17,7 +17,7 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    tile.draw(0, 0);
+    cellGrid.draw();
 }
 
 //--------------------------------------------------------------

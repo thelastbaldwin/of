@@ -8,32 +8,34 @@
 
 #pragma once
 #include <map>
+#include <algorithm>
 #include "ofMain.h"
 #include "Cell.h"
+#include "CellDisplay.h"
 
 namespace Virus{
+   
     class CellGrid{
     public:
         CellGrid();
-        CellGrid(int _x, int _y, int _width, int _height, int _cellSize);
-        
-        int getX();
-        int getY();
-        int getWidth();
-        int getHeight();
-        int getCellSize();
+        CellGrid(int _x, int _y, int _width, int _height, int _cellSize, ofImage* tile);
         
         Cell getRandomCell();
         
-        friend std::ostream& operator << (std::ostream& os, const Virus::CellGrid& cellGrid);
+        //draws the grid, calling CellDisplay.draw
+        void draw();
         
         //return the latest additions to the spread
-        std::vector<Point> spread();
+        void spread();
+        friend std::ostream& operator << (std::ostream& os, const Virus::CellGrid& cellGrid);
         
     private:
+        int width, height;
+        CellDisplay cellDisplay;
         bool isSpreading;
-        int x, y, width, height, cellSize;
         std::map<Point, Cell> cells;
         std::vector<Point> activeSet;
     };
+    
+    bool isActiveCell(const Point p);
 }

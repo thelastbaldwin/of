@@ -10,15 +10,15 @@
 
 namespace Virus{
 
-    Cell::Cell(): isActive(false), position(Point(0, 0)){};
-    Cell::Cell(int _x, int _y): isActive(false), position(Point(_x,_y)){};
+    Cell::Cell(): bActive(false), position(Point(0, 0)){};
+    Cell::Cell(int _x, int _y): bActive(false), position(Point(_x,_y)){};
 
     void Cell::flip(){
-        isActive = !isActive;
+        bActive = !bActive;
     };
 
     void Cell::setState(bool state){
-        isActive = state;
+        bActive = state;
     };
 
     void Cell::calculateNeighbors(int gridWidth, int gridHeight){
@@ -34,6 +34,10 @@ namespace Virus{
                 }
             }
         }
+    }
+    
+    bool Cell::isActive() const{
+        return bActive;
     }
     
     std::ostream& operator << (std::ostream& os, const Point& p){
