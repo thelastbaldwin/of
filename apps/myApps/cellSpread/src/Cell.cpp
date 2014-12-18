@@ -10,15 +10,11 @@
 
 namespace Virus{
 
-    Cell::Cell(): bActive(false), position(Point(0, 0)){};
-    Cell::Cell(int _x, int _y): bActive(false), position(Point(_x,_y)){};
+    Cell::Cell(): bSurrounded(false), bActive(false), position(Point(0, 0)){};
+    Cell::Cell(int _x, int _y): bSurrounded(false), bActive(false), position(Point(_x,_y)){};
 
     void Cell::flip(){
         bActive = !bActive;
-    };
-
-    void Cell::setState(bool state){
-        bActive = state;
     };
 
     void Cell::calculateNeighbors(int gridWidth, int gridHeight){
@@ -34,11 +30,23 @@ namespace Virus{
                 }
             }
         }
-    }
+    };
     
     bool Cell::isActive() const{
         return bActive;
-    }
+    };
+    
+    void Cell::isSurrounded(bool state){
+        bSurrounded = state;
+    };
+    
+    bool Cell::isSurrounded() const{
+        return bSurrounded;
+    };
+
+    void Cell::reset(){
+        bSurrounded = false;
+    };
     
     std::ostream& operator << (std::ostream& os, const Point& p){
         os << p.x << ", " << p.y;

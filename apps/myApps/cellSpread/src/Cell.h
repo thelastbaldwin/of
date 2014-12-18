@@ -48,10 +48,15 @@ namespace Virus{
         friend class CellGrid;
         
         bool isActive() const;
+        void isSurrounded(bool state);
+        bool isSurrounded() const;
+        
+        void reset();
         
     private:
         Point position;
         bool bActive;
+        bool bSurrounded;
         std::vector<Point> neighbors;
     };
 
