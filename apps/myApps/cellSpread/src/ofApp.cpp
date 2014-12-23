@@ -3,13 +3,14 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     ofSetVerticalSync(true);
+    int tileSize = 40;
     
     tile.loadImage("houndstooth.jpg");
-    
+    cout << ofGetWidth() << ", " << ofGetHeight() << endl;
     // int _x, int _y, int _width, int _height, int _cellSize, ofImage* tile
-    cellGrid = Virus::CellGrid(0, 0, 64, 36, 20, &tile);
+    cellGrid = Virus::CellGrid(0, 0, (ofGetWidth()/tileSize) + 1, (ofGetHeight()/tileSize) + 1, tileSize, &tile);
     
-    ofSetFrameRate(20);
+    ofSetFrameRate(24);
 }
 
 //--------------------------------------------------------------
@@ -24,6 +25,14 @@ void ofApp::update(){
 void ofApp::draw(){
     ofBackground(0,0, 0);
     cellGrid.draw();
+    
+    std::stringstream ss;
+    std::string frameRate;
+    ss << ofGetFrameRate();
+    ss >> frameRate;
+    ofDrawBitmapString(frameRate, ofGetWidth() - 40, ofGetHeight() - 20);
+    ss.clear();
+    ss.str("");
 }
 
 //--------------------------------------------------------------

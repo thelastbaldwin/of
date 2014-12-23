@@ -54,35 +54,32 @@ namespace Virus{
     };
     
     void CellGrid::spread(){
-        if(getRemainingCellCount() > 0){
-            std::cout << activeSet.size() << "\n";
-            if(activeSet.size() == 0){
-                //random seed
-                Cell rCell = getRandomCell();
-                rCell.flip();
-                activeSet.push_back(rCell.position);
-            }else{
-                for(int i = 0, size = activeSet.size(); i < size; ++i){
-                    std::vector<Point> neighbors;
-                    Cell* currentCell = &cells[activeSet[i]];
+        if(activeSet.size() == 0){
+            //random seed
+            Cell rCell = getRandomCell();
+            rCell.flip();
+            activeSet.push_back(rCell.position);
+        }else{
+            for(int i = 0, size = activeSet.size(); i < size; ++i){
+                std::vector<Point> neighbors;
+                Cell* currentCell = &cells[activeSet[i]];
+                
+                if(!currentCell->isSurrounded()){
+                    for(auto pointIter = currentCell->neighbors.begin(); pointIter != currentCell->neighbors.end(); ++pointIter){
+                        //add relevant neighbors to set depending on direction
+                        if((isSpreading && !cells[*pointIter].isActive()) || (!isSpreading && cells[*pointIter].isActive())){
+                            neighbors.push_back(*pointIter);
+                        }
+                    }
                     
-                    if(!currentCell->isSurrounded()){
-                        for(auto pointIter = currentCell->neighbors.begin(); pointIter != currentCell->neighbors.end(); ++pointIter){
-                            //add relevant neighbors to set depending on direction
-                            if((isSpreading && !cells[*pointIter].isActive()) || (!isSpreading && cells[*pointIter].isActive())){
-                                neighbors.push_back(*pointIter);
-                            }
-                        }
-                        
-                        //pick a random cell from the set
-                        if(neighbors.size() > 0){
-                            int index = int(ofRandom (neighbors.size()));
-                            Point nextActivePoint = neighbors[index];
-                            cells[nextActivePoint].flip();
-                            activeSet.push_back(nextActivePoint);
-                        }else{
-                            currentCell->isSurrounded(true);
-                        }
+                    //pick a random cell from the set
+                    if(neighbors.size() > 0){
+                        int index = int(ofRandom (neighbors.size()));
+                        Point nextActivePoint = neighbors[index];
+                        cells[nextActivePoint].flip();
+                        activeSet.push_back(nextActivePoint);
+                    }else{
+                        currentCell->isSurrounded(true);
                     }
                 }
             }

@@ -8,6 +8,7 @@
 
 #pragma once
 #include <map>
+#include <list>
 #include <algorithm>
 #include "ofMain.h"
 #include "Cell.h"
