@@ -2,6 +2,9 @@
 
 #include "ofMain.h"
 #include "CellGrid.h"
+#include "ofxSyphon.h"
+#include "ofxOsc.h"
+
 
 class ofApp : public ofBaseApp{
 
@@ -22,4 +25,21 @@ class ofApp : public ofBaseApp{
     
         ofImage tile;
         Virus::CellGrid cellGrid;
+    
+        //syphon stuff
+        ofxSyphonServer mainOutputSyphonServer;
+        ofxSyphonServer individualTextureSyphonServer;
+    
+        ofFbo fbo;
+    
+        //for sending out heartbeat
+        ofxOscSender sender;
+    
+        //heartbeat params
+        const static int SEND_PORT;
+        const static std::string HOST;
+    
+        //how often to send a heartbeat
+        const static float heartBeatInterval;
+        float lastInterval;
 };
