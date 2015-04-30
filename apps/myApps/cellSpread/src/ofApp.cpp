@@ -2,7 +2,7 @@
 
 const int ofApp::SEND_PORT = 12345;
 const std::string ofApp::HOST = "localhost";
-const float ofApp::heartBeatInterval = 30;
+const float ofApp::heartBeatInterval = 900;
 
 //--------------------------------------------------------------
 void ofApp::setup(){
