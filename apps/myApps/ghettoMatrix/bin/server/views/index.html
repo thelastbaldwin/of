@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>image send test</title>
+		<title>Stereoscopic Photo Booth</title>
 		<link rel="stylesheet" media="all" href="css/style.css" />
 	</head>
 	<body>
@@ -13,7 +13,18 @@
 				<button type="button" value="traditional" class="col span_6">Traditional</button>
 			</div>
 			<div class="row gutters">
-				<img src="img/ohboy.gif" class="col span_12" alt="photo"/>
+				<img src="img/ohboy.gif" class="photo col span_12" alt="photo"/>
+			</div>
+		</div>
+		<div id="modal-overlay" class="hide">
+			<div id="count" class="clearfix">
+				<h2 class="counter">3</h2>
+				<ul>
+					<li class="counter-tag hide">&#9632;</li>
+					<li class="counter-tag hide">&#9632;</li>
+					<li class="counter-tag hide">&#9632;</li>
+					<li class="counter-tag hide">&#9632;</li>
+				</ul>
 			</div>
 		</div>
 		<script src="/socket.io/socket.io.js"></script>
