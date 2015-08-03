@@ -12,6 +12,8 @@ html{
 body{
 	background: #7A86AD;
 	position: relative;
+	height: 100%;
+	font-family: Verdana;
 }
 
 button{
@@ -22,6 +24,11 @@ button{
 	border: 2px solid;
 	margin-top: 0.25em;
 	margin-bottom: 0.25em;
+}
+
+button:active,
+button:focus{
+	outline: none;
 }
 
 button[value="matrix"]{
@@ -44,11 +51,11 @@ button[value="traditional"]:active{
 	background: #551A00;
 }
 
-div.container .row img.photo{
+/*div.container .row img.photo{
 	display: block;
 	max-width: 640px;
 	margin: 0 calc(50% - 320px);
-}
+}*/
 
 #modal-overlay{
 	position: absolute;
@@ -80,7 +87,7 @@ div.container .row img.photo{
 }
 
 #count h2{
-	font: bold 12em '.HelveticaNeueDeskInterface-Regular';
+	font: bold 12em Verdana;
 	text-align: center;
 }
 

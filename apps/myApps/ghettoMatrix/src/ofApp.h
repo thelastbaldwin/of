@@ -15,17 +15,13 @@ class ofApp : public ofBaseApp{
 		void draw();
 
 		void keyPressed(int key);
-		void keyReleased(int key);
-		void mouseMoved(int x, int y );
-		void mouseDragged(int x, int y, int button);
-		void mousePressed(int x, int y, int button);
-		void mouseReleased(int x, int y, int button);
-		void windowResized(int w, int h);
-		void dragEvent(ofDragInfo dragInfo);
+
 		void gotMessage(ofMessage msg);
-        void sendMessage(std::string filename, std::string id);
-        std::string takeTraditionalPhoto(const string& fileName);
-        std::string takeMatrixPhoto(const string& fileName);
+        void sendPhoto(const string& filename, const string& id);
+        void sendCountDown(const int& seconds, const string& id);
+        void sendMessage(const string& message, const string& address,const string& id);
+        std::string takeTraditionalPhoto(const string& fileName, const string& id);
+        std::string takeMatrixPhoto(const string& fileName, const string& id);
 
         std::vector<int> getCameraIds(std::string idString);
 
@@ -40,13 +36,6 @@ class ofApp : public ofBaseApp{
         static const std::string OUTPUT_PATH;
         static const int NUM_MATRIX_FRAMES;
 
-        ofImage qrcode;
-
-        ofDirectory dir;
-		vector<ofImage> animals;
-		int currentAnimal;
-
-		ofShader shader;
 		ofFbo fbo;
 
         ofxOscReceiver receiver;
@@ -55,9 +44,6 @@ class ofApp : public ofBaseApp{
         CamThread* hMainCameraThread;
         CamThread* hCamThread1;
         CamThread* hCamThread2;
-
-        ofSoundPlayer beep;
-        ofSoundPlayer yeah;
 
 		ofXml settings;
 };
