@@ -4,16 +4,32 @@
 /* IMPORT 12 COLUMN RESPONSIVE GS */
 @import url("responsive.gs.12col.css");
 
+*{
+	box-sizing: border-box;
+}
+
 html{
 	font-size: 16px;
 	height: 100%;
 }
 
 body{
-	background: #7A86AD;
+	background: rgba(255,255,255,1);
+	background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 21%, rgba(241,160,157,1) 100%);
+	background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(255,255,255,1)), color-stop(21%, rgba(255,255,255,1)), color-stop(100%, rgba(241,160,157,1)));
+	background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 21%, rgba(241,160,157,1) 100%);
+	background: -o-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 21%, rgba(241,160,157,1) 100%);
+	background: -ms-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 21%, rgba(241,160,157,1) 100%);
+	background: linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 21%, rgba(241,160,157,1) 100%);
 	position: relative;
 	height: 100%;
 	font-family: Verdana;
+}
+
+.container{
+	height: 100%;
+	padding: 2em;
+	background: rgba(255, 255, 255, 0.35);
 }
 
 button{
@@ -32,23 +48,23 @@ button:focus{
 }
 
 button[value="matrix"]{
-	background: #4E9231;
-	color: #A8DB92;
-	border-color: #A8DB92;
+	background: #8c2865;
+	color: #2f0000;
+	border-color: #2f0000;
 }
 
 button[value="matrix"]:active{
-	background: #1F4B00;
+	background: #5f0d5c;
 }
 
 button[value="traditional"]{
-	background: #AA6A39;
-	color: #FFCFAA;
-	border-color: #FFCFAA;
+	background: #baa1c7;
+	color: #2f0000;
+	border-color: #2f0000;
 }
 
 button[value="traditional"]:active{
-	background: #551A00;
+	background: #7b496b;
 }
 
 /*div.container .row img.photo{
