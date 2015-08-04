@@ -33,7 +33,7 @@ public:
 private:
     void threadedFunction(){
         while( isThreadRunning()){
-            for (int i = 0; i < vidGrabbers.size(); ++i){
+            for (auto i = 0; i < vidGrabbers.size(); ++i){
                 vidGrabbers[i].update();
                 if(vidGrabbers[i].isFrameNew()){
                     lock();

@@ -4,8 +4,16 @@
 /* IMPORT 12 COLUMN RESPONSIVE GS */
 @import url("responsive.gs.12col.css");
 
+html{
+	font-size: 16px;
+	height: 100%;
+}
+
 body{
 	background: #7A86AD;
+	position: relative;
+	height: 100%;
+	font-family: Verdana;
 }
 
 button{
@@ -16,6 +24,11 @@ button{
 	border: 2px solid;
 	margin-top: 0.25em;
 	margin-bottom: 0.25em;
+}
+
+button:active,
+button:focus{
+	outline: none;
 }
 
 button[value="matrix"]{
@@ -36,4 +49,54 @@ button[value="traditional"]{
 
 button[value="traditional"]:active{
 	background: #551A00;
+}
+
+/*div.container .row img.photo{
+	display: block;
+	max-width: 640px;
+	margin: 0 calc(50% - 320px);
+}*/
+
+#modal-overlay{
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(255, 255, 255, 0.75);
+	pointer-events: none;
+	transition: opacity 100ms ease-in-out;
+}
+
+#count{
+	position: absolute;
+	text-align: center;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	margin: auto;
+	color: black;
+	z-index: 1;
+	width: 50%;
+	height: 30%;
+}
+
+#count ul{
+	text-align: center;
+}
+
+#count h2{
+	font: bold 12em Verdana;
+	text-align: center;
+}
+
+#count li{
+	font-size: 6em;
+	display: inline-block;
+	transition: opacity 250ms ease-in-out;
+}
+
+.hide{
+	opacity: 0;
 }

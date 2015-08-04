@@ -1,4 +1,4 @@
-// oF application must be running before this
+// server needs to run before application
 var express = require('express'),
 	app = express(),
 	http = require('http').Server(app),
@@ -26,6 +26,7 @@ function getOSCMessage(msg){
 		args = element.args; //contains 'type' and 'value
 
 		return {
+			address: address,
 			filename: args[0].value,
 			id : args[1].value
 		}
@@ -52,9 +53,16 @@ function sendOSCMessage(photoType, socketId){
 }
 
 recieveSocket.on('message', function(message, remote){
-	if (address = '/transmit/photo') {
-		var messageValues = getOSCMessage(message);
-		io.sockets.to(messageValues.id).emit('transmit photo', messageValues.filename);
+	var messageValues = getOSCMessage(message);
+	switch(messageValues.address){
+		case '/transmit/photo':
+			io.sockets.to(messageValues.id).emit('transmit photo', messageValues.filename);
+			break;
+		case '/photo/countdown':
+			io.sockets.to(messageValues.id).emit('countdown timer', messageValues.filename);
+			break;
+		default:
+			console.log(messageValues);
 	}
 });
 

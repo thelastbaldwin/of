@@ -10,15 +10,13 @@ const std::string ofApp::OUTPUT_PATH = "output/";
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    ofSetWindowTitle("Ghetto Matrix");
+
     sender.setup(HOST, SEND_PORT);
     receiver.setup(RECEIVE_PORT);
 
     settings.load("settings.xml");
-
-    shader.load("shader/shaderVert.c","shader/shaderFrag.c");
     fbo.allocate(ofGetWidth(), ofGetHeight());
-
-    qrcode.loadImage("qrcode.png");
 
     std::vector<int> cam1Ids = getCameraIds(settings.getValue("camthread1"));
     hCamThread1 = new CamThread(cam1Ids, 320, 240);
@@ -32,32 +30,10 @@ void ofApp::setup(){
     hMainCameraThread = new CamThread(mainCameraIds, 1024, 768);
     hMainCameraThread->startThread();
 
-    //TODO: UPDATE SOUNDS
-    beep.loadSound("short_beep.wav");
-    beep.setMultiPlay(false);
-    yeah.loadSound("short_yeah.ogg");
-    yeah.setMultiPlay(false);
-
     gifEncoder.setup(320, 240, 0.1);
     gifEncoder.start();
 
     ofAddListener(ofxGifEncoder::OFX_GIF_SAVE_FINISHED, this, &ofApp::onGifSaved);
-
-    //animal pictures
-    dir.listDir("animals/");
-    dir.sort();
-
-    //allocate the vector to have as many ofImages as files
-    if( dir.size() > 0){
-		animals.assign(dir.size(), ofImage());
-	}
-
-	// you can now iterate through the files and load them into the ofImage vector
-	for(int i = 0; i < (int)dir.size(); i++){
-		animals[i].loadImage(dir.getPath(i));
-	}
-
-	currentAnimal = 0;
 }
 
 //--------------------------------------------------------------
@@ -74,11 +50,15 @@ void ofApp::update(){
 
             if(type == "matrix"){
                 cout << "matrix requested" << endl;
-                takeMatrixPhoto("matrix-" + ofGetTimestampString("%m%d%Y-%H%M%s") + "_" + id + ".gif");
+                takeMatrixPhoto("matrix-" + ofGetTimestampString("%m%d%Y-%H%M%s") + "_" + id + ".gif", id);
             }else if(type == "traditional"){
+                //take a picture every time we get this message
+                //while we have less than 4 images, keep waiting
+                //once we have all the images, composite it and send it
+                //using sendMessage
                 cout << "traditional requested" << endl;
-                std::string fileName = takeTraditionalPhoto("traditional-" + ofGetTimestampString("%m%d%Y-%H%M%s") + ".jpg");
-                sendMessage(fileName, id);
+                std::string fileName = takeTraditionalPhoto("traditional-" + ofGetTimestampString("%m%d%Y-%H%M%s") + ".jpg", id);
+                sendPhoto(fileName, id);
             }
 
 		}else{
@@ -90,22 +70,6 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
 
-
-if(dir.size() > 0){
-    fbo.begin();
-    ofBackground(ofColor::white);
-    animals[currentAnimal].setAnchorPoint(animals[currentAnimal].width/2, animals[currentAnimal].height/2);
-    animals[currentAnimal].draw(ofGetWidth()/2, ofGetHeight()/2);
-    fbo.end();
-    shader.begin();
-    float time = ofGetElapsedTimef()/2;
-    shader.setUniform1f("time", time);
-
-    fbo.draw(0, 0);
-
-    shader.end();
-}
-    qrcode.draw(0, 0);
 }
 
  std::vector<int> ofApp::getCameraIds(std::string idString){
@@ -126,7 +90,7 @@ if(dir.size() > 0){
  }
 
 
-std::string ofApp::takeTraditionalPhoto(const string& fileName){
+std::string ofApp::takeTraditionalPhoto(const string& fileName, const string& id){
     //this method takes 4 pictures, each after ~3 second day
     //and composes them into a single 4-up image
     ofFbo fbo;
@@ -138,12 +102,14 @@ std::string ofApp::takeTraditionalPhoto(const string& fileName){
     //repeat 4 times
     for(int i = 0; i < 4; ++i){
         //wait 3 seconds
-        beep.play();
-        ofSleepMillis(1300);
-        yeah.play();
+        sendCountDown(3, id);
+        //should send the countdown
+
+        //takes 1 picture
         hMainCameraThread->lock();
         currentFrame.getPixelsRef() = hMainCameraThread->pixels[0];
         hMainCameraThread->unlock();
+
         currentFrame.reloadTexture();
         //draw to fbo in correct quadrant
         switch(i){
@@ -160,7 +126,6 @@ std::string ofApp::takeTraditionalPhoto(const string& fileName){
                 currentFrame.draw(1024, 768);
                 break;
         }
-        ofSleepMillis(800);
     }
     fbo.end();
 
@@ -171,37 +136,50 @@ std::string ofApp::takeTraditionalPhoto(const string& fileName){
     finalImage.reloadTexture();
     finalImage.saveImage(OUTPUT_PATH + fileName);
 
-    currentAnimal++;
-    currentAnimal %= animals.size();
-
     return fileName;
 }
 
-std::string ofApp::takeMatrixPhoto(const string& fileName){
+std::string ofApp::takeMatrixPhoto(const string& fileName, const string&){
     gifEncoder.reset();
     ofImage tmpImage;
     tmpImage.allocate(320, 240, OF_IMAGE_COLOR);
 
     //collect the camera images and insert them into cameraPixels
     hCamThread1->lock();
+    hCamThread2->lock();
+
+
+    //forward
     std::for_each(hCamThread1->pixels.begin(), hCamThread1->pixels.end(), [&](const ofPixels& pixels){
         tmpImage.getPixelsRef() = pixels;
         tmpImage.reloadTexture();
         gifEncoder.addFrame(tmpImage);
     });
-    hCamThread1->unlock();
-    hCamThread2->lock();
+
+
     std::for_each(hCamThread2->pixels.begin(), hCamThread2->pixels.end(), [&](const ofPixels& pixels){
         tmpImage.getPixelsRef() = pixels;
         tmpImage.reloadTexture();
         gifEncoder.addFrame(tmpImage);
     });
+
+    //backward
+    std::for_each(hCamThread2->pixels.rbegin(), hCamThread2->pixels.rend(), [&](const ofPixels& pixels){
+        tmpImage.getPixelsRef() = pixels;
+        tmpImage.reloadTexture();
+        gifEncoder.addFrame(tmpImage);
+    });
+
+    std::for_each(hCamThread1->pixels.rbegin(), hCamThread1->pixels.rend(), [&](const ofPixels& pixels){
+        tmpImage.getPixelsRef() = pixels;
+        tmpImage.reloadTexture();
+        gifEncoder.addFrame(tmpImage);
+    });
+
+    hCamThread1->unlock();
     hCamThread2->unlock();
 
     gifEncoder.save(OUTPUT_PATH + fileName);
-
-    currentAnimal++;
-    currentAnimal %= animals.size();
 
     return fileName;
 }
@@ -213,7 +191,7 @@ void ofApp::onGifSaved(string &fileName) {
     int slashPos = fileName.find("/");
     std::string parsedFilename = fileName.substr(slashPos + 1, fileName.size() - 1);
     std::string id = fileName.substr(underscorePos + 1, dotPos - underscorePos - 1);
-    sendMessage(parsedFilename, id);
+    sendPhoto(parsedFilename, id);
     cout << "gif sent to" << id << endl;
     cout << "gif saved as " << fileName << endl;
 }
@@ -221,72 +199,49 @@ void ofApp::onGifSaved(string &fileName) {
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     //just for testing, but might be useful for MANUAL OVERRIDE
+    cout << key << endl;
     if(key == 't'){
         cout << "space pressed" << endl;
-        takeTraditionalPhoto("traditional - " + ofGetTimestampString("%m%d%Y-%H%M%s") + ".jpg");
+        takeTraditionalPhoto("traditional - " + ofGetTimestampString("%m%d%Y-%H%M%s") + ".jpg", NULL);
     }
     if(key == 'm'){
         cout << "m pressed" << endl;
-        takeMatrixPhoto("matrix - " + ofGetTimestampString("%m%d%Y-%H%M%s") + ".gif");
-    }
-    if(key == OF_KEY_LEFT){
-        currentAnimal--;
-        currentAnimal %= animals.size();
-    }
-    if(key == OF_KEY_RIGHT){
-        currentAnimal++;
-        currentAnimal %= animals.size();
+        takeMatrixPhoto("matrix - " + ofGetTimestampString("%m%d%Y-%H%M%s") + ".gif", NULL);
     }
 }
 
-//--------------------------------------------------------------
-void ofApp::keyReleased(int key){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseMoved(int x, int y ){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseDragged(int x, int y, int button){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mousePressed(int x, int y, int button){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseReleased(int x, int y, int button){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::windowResized(int w, int h){
-
-}
 
 //--------------------------------------------------------------
 void ofApp::gotMessage(ofMessage msg){
 
 }
 
-void ofApp::sendMessage(std::string filename, std::string id){
+void ofApp::sendPhoto(const string& filename, const string& id){
     cout << "trying to send " << filename << " to " << id << endl;
-    ofxOscMessage m;
+    /*ofxOscMessage m;
 	m.setAddress("/transmit/photo");
 	m.addStringArg(filename);
     m.addStringArg(id);
-	sender.sendMessage(m);
+	sender.sendMessage(m);*/
+	sendMessage(filename, "/transmit/photo", id);
 }
 
-//--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo){
-
+void ofApp::sendCountDown(const int& seconds, const string& id){
+    for(int i = seconds; i > 0; --i){
+        sendMessage(ofToString(i), "/photo/countdown", id);
+        ofSleepMillis(1000);
+    }
 }
+
+void ofApp::sendMessage(const string& message, const string& address, const string& id){
+    cout << "message: " << message << ", address: " << address << ", id: " << id << endl;
+    ofxOscMessage m;
+    m.setAddress(address);
+    m.addStringArg(message);
+    m.addStringArg(id);
+    sender.sendMessage(m);
+}
+
 
 void ofApp::exit(){
     hMainCameraThread->stopThread();
