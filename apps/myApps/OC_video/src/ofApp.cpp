@@ -56,8 +56,39 @@ void ofApp::setup(){
 
     // 7. If you'd like to launch the newly created video in Quicktime
     // you can enable it here.
-    bLaunchInQuicktime = false;
+//    bLaunchInQuicktime = false;
     
+    shader.load("shaders/passThroughVert.c", "shaders/horizontalDistortFrag.c");
+    shader.setUniform1f("height", 480);
+    
+    //shader settings
+    scrollSpeed = 10.0;
+    wavelength = 0.5;
+    amplitude = 10;
+    speed = 1.0;
+    opacity = 1.0;
+    scanlineHeight = 2;
+    
+    scanlineImage.allocate(1280, 720, OF_IMAGE_COLOR_ALPHA);
+    generateScanlineImage(scanlineImage, scanlineHeight, 0.5);
+    
+    fbo.allocate(640, 480);
+    quad.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
+    quad.addVertex(ofPoint(0, fbo.getHeight(), 0));
+    quad.addTexCoord(ofPoint(0, fbo.getHeight(), 0));
+    
+    quad.addVertex(ofPoint(0, 0, 0));
+    quad.addTexCoord(ofPoint(0, 0, 0));
+    quad.addVertex(ofPoint(fbo.getWidth(), fbo.getHeight(), 0));
+    quad.addTexCoord(ofPoint(fbo.getWidth(), fbo.getHeight(), 0));
+    quad.addVertex(ofPoint(fbo.getWidth(), 0, 0));
+    quad.addTexCoord(ofPoint(fbo.getWidth(), 0, 0));
+    
+    fbo.begin();
+    ofClear(0, 0, 0, 0);
+    fbo.end();
+    
+
 }
 
 
@@ -108,14 +139,36 @@ void ofApp::draw(){
     
     // draw the playback video
     if(recordedVideoPlayback.isLoaded()){
+        
+        
+        
+        shader.setUniform1f("time", ofGetElapsedTimef());
+        shader.setUniform1f("wavelength", wavelength);
+        shader.setUniform1f("amplitude", amplitude);
+        shader.setUniform1f("speed", speed);
+        shader.setUniform1i("scanlineHeight", scanlineHeight);
+        shader.setUniform1f("opacity", opacity);
+        shader.setUniform1f("scrollSpeed", scrollSpeed);
         ofPushStyle();
+        
         ofFill();
         ofSetColor(255);
         // fit it into the preview window, but use the correct aspect ratio
         ofRectangle recordedRect(ofRectangle(0,0,recordedVideoPlayback.getWidth(),recordedVideoPlayback.getHeight()));
         recordedRect.scaleTo(playbackWindow);
-        recordedVideoPlayback.draw(recordedRect);
+    
+        fbo.begin();
+       
+        shader.begin();
+        shader.setUniformTexture("video", recordedVideoPlayback.getTextureReference(), 1);
+        shader.setUniformTexture("scanlines", scanlineImage.getTextureReference(), 2);
+        quad.draw();
+        shader.end();
+        fbo.end();
+        
+        fbo.draw(640+20, 20);
         ofPopStyle();
+        
     }
 
     ofPushStyle();
@@ -186,7 +239,7 @@ void ofApp::keyPressed(int key){
             if(recordedVideoPlayback.isLoaded()){
                 recordedVideoPlayback.close();
             }
-	        vidRecorder->startRecording("MyMovieFile.mov");
+	        vidRecorder->startRecording(ofGetTimestampString("%n-%e-%Y-%H-%M-%s_")+ "oc.mov");
         }
     }
 }
@@ -215,6 +268,44 @@ void ofApp::videoSaved(ofVideoSavedEventArgs& e){
 	else {
 		ofLogError("videoSavedEvent") << "Video save error: " << e.error;
 	}
+}
+
+void ofApp::generateScanlineImage(ofImage& img, int scanLineHeight, float opacity){
+    //generate a scanLine pattern in a provided image
+    
+    
+    ofPixels pixels = img.getPixelsRef();
+    int currentPixelCount = 0,
+    index = 0;
+    //start with black
+    bool isDark = true;
+    
+    const ofColor black(0, 0, 0, opacity * 255);
+    const ofColor transparent(0, 0, 0, 0);
+    ofColor currentColor;
+    
+    //columns
+    for(int i = 0; i < img.getHeight(); ++i){
+        //this modulo operation could happen in the shader itself,
+        //making the need for this texture generation obsolete
+        if(i % scanLineHeight == 0){
+            isDark = !isDark;
+        }
+        
+        if(isDark){
+            currentColor = black;
+        }else{
+            currentColor = transparent;
+        }
+        
+        //rows
+        for(int j = 0; j < img.getWidth(); ++j){
+            pixels.setColor(j, i, currentColor);
+        }
+    }
+    
+    img.setFromPixels(pixels);
+    img.reloadTexture();
 }
 
 //--------------------------------------------------------------

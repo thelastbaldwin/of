@@ -31,4 +31,19 @@ class ofApp : public ofBaseApp{
 	    vector<string> audioDevices;
     
         bool bLaunchInQuicktime;
+
+        ofImage scanlineImage;
+        void generateScanlineImage(ofImage& img, int scanLineHeight, float opacity);
+
+        //distortion settings;
+        float scrollSpeed;
+        float wavelength;
+        float amplitude;
+        float speed;
+        float opacity;
+        unsigned int scanlineHeight;
+    
+        ofFbo fbo;
+        ofMesh quad;
+        ofShader shader;
 };
