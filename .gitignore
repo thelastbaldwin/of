@@ -19,11 +19,10 @@ bin/
 !bin/data/
 !bin/libs/
 !bin/server/
+!bin/shaders//
 
 *.xcodeproj
 *.xcodeproj/
-*.make
-Makefile
 *.plist
 *.xcconfig
 *.app
