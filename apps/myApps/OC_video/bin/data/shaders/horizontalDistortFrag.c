@@ -93,16 +93,16 @@ out vec4 outputColor;
 
 void main(){
     //extract just the x and y values from the current fragmentCoordinates
-    vec2 pos = gl_FragCoord.xy;
+    vec2 pos = gl_FragCoord.xy * vec2(1280.0/640.0, 720.0/480.0);
 
     //want the unmodified texture coordiniate
     vec2 originalPos = pos;
     
     //shift the x-position with a sin wave
-    // pos.x += amplitude * cos((pos.y + time * speed)/ wavelength); 
+    pos.x += amplitude * cos((pos.y + time * speed)/ wavelength); 
 
     //shift with noise
-    //pos.x += amplitude * snoise(vec2(pos.y + time * speed, 0)/wavelength);
+    pos.x += amplitude * snoise(vec2(pos.y + time * speed, 0)/wavelength);
 
     //height of frame
     pos.y = mod(pos.y + scrollSpeed * time, height);
@@ -113,7 +113,7 @@ void main(){
     vec4 sampleColor = texture(video, pos);
 
     //remove a proportional amount of color based on the scanline texture color
-    // sampleColor.rgb = sampleColor.rgb - sampleColor.rgb * scanlineColor.a;
+    sampleColor.rgb = sampleColor.rgb - sampleColor.rgb * scanlineColor.a;
 
     //using mix performs the same function as the commented line below
     outputColor = sampleColor;

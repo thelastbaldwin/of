@@ -44,6 +44,7 @@ void ofApp::setup(){
     // vidRecorder->setVideoCodec(videoCodecs[2]);
 	
     // 5. Initialize the grabber.
+    vidGrabber.setDeviceID(1);
     vidGrabber.initGrabber(1280, 720);
 
     // If desired, you can disable the preview video.  This can
@@ -59,12 +60,13 @@ void ofApp::setup(){
 //    bLaunchInQuicktime = false;
     
     shader.load("shaders/passThroughVert.c", "shaders/horizontalDistortFrag.c");
-    shader.setUniform1f("height", 480);
+//    shader.setUniform1f("height", 320);
+//    shader.setUniform1i("height", 20);
     
     //shader settings
-    scrollSpeed = 10.0;
-    wavelength = 0.5;
-    amplitude = 10;
+    scrollSpeed = 60.0;
+    wavelength = 10.0;
+    amplitude = 2.0;
     speed = 1.0;
     opacity = 1.0;
     scanlineHeight = 2;
@@ -72,29 +74,93 @@ void ofApp::setup(){
     scanlineImage.allocate(1280, 720, OF_IMAGE_COLOR_ALPHA);
     generateScanlineImage(scanlineImage, scanlineHeight, 0.5);
     
-    fbo.allocate(640, 480);
+    fbo.allocate(640, 360);
     quad.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
     quad.addVertex(ofPoint(0, fbo.getHeight(), 0));
-    quad.addTexCoord(ofPoint(0, fbo.getHeight(), 0));
+//    quad.addTexCoord(ofPoint(0, fbo.getHeight(), 0));
+    quad.addTexCoord(recordedVideoPlayback.getTextureReference().getCoordFromPercent(0, 1));
     
     quad.addVertex(ofPoint(0, 0, 0));
-    quad.addTexCoord(ofPoint(0, 0, 0));
+//    quad.addTexCoord(ofPoint(0, 0, 0));
+        quad.addTexCoord(recordedVideoPlayback.getTextureReference().getCoordFromPercent(0, 0));
+    
     quad.addVertex(ofPoint(fbo.getWidth(), fbo.getHeight(), 0));
-    quad.addTexCoord(ofPoint(fbo.getWidth(), fbo.getHeight(), 0));
+//    quad.addTexCoord(ofPoint(fbo.getWidth(), fbo.getHeight(), 0));
+    quad.addTexCoord(recordedVideoPlayback.getTextureReference().getCoordFromPercent(1, 1));
+    
     quad.addVertex(ofPoint(fbo.getWidth(), 0, 0));
-    quad.addTexCoord(ofPoint(fbo.getWidth(), 0, 0));
+//    quad.addTexCoord(ofPoint(fbo.getWidth(), 0, 0));
+    quad.addTexCoord(recordedVideoPlayback.getTextureReference().getCoordFromPercent(1, 0));
     
     fbo.begin();
     ofClear(0, 0, 0, 0);
     fbo.end();
     
+    //arduino stuff
+    arduino.connect("/dev/tty.usbmodema0111", 57600);
+    
+    // listen for EInitialized notification. this indicates that
+    // the arduino is ready to receive commands and it is safe to
+    // call setupArduino()
+    ofAddListener(arduino.EInitialized, this, &ofApp::setupArduino);
+    bSetupArduino	= false;	// flag so we setup arduino when its ready, you don't need to touch this :)
+}
 
+//--------------------------------------------------------------
+void ofApp::setupArduino(const int & version) {
+    
+    // remove listener because we don't need it anymore
+    ofRemoveListener(arduino.EInitialized, this, &ofApp::setupArduino);
+    
+    // it is now safe to send commands to the Arduino
+    bSetupArduino = true;
+    
+    // print firmware name and version to the console
+    ofLogNotice() << arduino.getFirmwareName();
+    ofLogNotice() << "firmata v" << arduino.getMajorFirmwareVersion() << "." << arduino.getMinorFirmwareVersion();
+    
+    // Note: pins A0 - A5 can be used as digital input and output.
+    // Refer to them as pins 14 - 19 if using StandardFirmata from Arduino 1.0.
+    // If using Arduino 0022 or older, then use 16 - 21.
+    // Firmata pin numbering changed in version 2.3 (which is included in Arduino 1.0)
+    
+    // set pins D2 and A5 to digital input
+    arduino.sendDigitalPinMode(7, ARD_INPUT);
+    
+    // set pin A0 to analog input
+    arduino.sendAnalogPinReporting(0, ARD_ANALOG);
+    
+    // Listen for changes on the digital and analog pins
+    ofAddListener(arduino.EDigitalPinChanged, this, &ofApp::digitalPinChanged);
+    ofAddListener(arduino.EAnalogPinChanged, this, &ofApp::analogPinChanged);
+}
+
+// digital pin event handler, called whenever a digital pin value has changed
+// note: if an analog pin has been set as a digital pin, it will be handled
+// by the digitalPinChanged function rather than the analogPinChanged function.
+
+//--------------------------------------------------------------
+void ofApp::digitalPinChanged(const int & pinNum) {
+    // do something with the digital input. here we're simply going to print the pin number and
+    // value to the screen each time it changes
+    bButtonState = (arduino.getDigital(pinNum) == 1);
+    cout << arduino.getDigital(pinNum) << endl;
+}
+
+// analog pin event handler, called whenever an analog pin value has changed
+
+//--------------------------------------------------------------
+void ofApp::analogPinChanged(const int & pinNum) {
+    // do something with the analog input. here we're simply going to print the pin number and
+    // value to the screen each time it changes
+    potValue = arduino.getAnalog(pinNum);
+    cout << potValue << endl;
 }
 
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	
+    arduino.update();
 	ofBackground(60, 60, 60);
 	
 	vidGrabber.update();
@@ -140,34 +206,34 @@ void ofApp::draw(){
     // draw the playback video
     if(recordedVideoPlayback.isLoaded()){
         
+//        ofPushStyle();
         
-        
-        shader.setUniform1f("time", ofGetElapsedTimef());
-        shader.setUniform1f("wavelength", wavelength);
-        shader.setUniform1f("amplitude", amplitude);
-        shader.setUniform1f("speed", speed);
-        shader.setUniform1i("scanlineHeight", scanlineHeight);
-        shader.setUniform1f("opacity", opacity);
-        shader.setUniform1f("scrollSpeed", scrollSpeed);
-        ofPushStyle();
-        
-        ofFill();
-        ofSetColor(255);
-        // fit it into the preview window, but use the correct aspect ratio
-        ofRectangle recordedRect(ofRectangle(0,0,recordedVideoPlayback.getWidth(),recordedVideoPlayback.getHeight()));
-        recordedRect.scaleTo(playbackWindow);
-    
+//        ofFill();
+//        ofSetColor(255);
+//        // fit it into the preview window, but use the correct aspect ratio
+//        ofRectangle recordedRect(ofRectangle(0,0,recordedVideoPlayback.getWidth(),recordedVideoPlayback.getHeight()));
+//        recordedRect.scaleTo(playbackWindow);
         fbo.begin();
        
         shader.begin();
+        recordedVideoPlayback.getTextureReference().setTextureMinMagFilter(GL_LINEAR, GL_LINEAR);
         shader.setUniformTexture("video", recordedVideoPlayback.getTextureReference(), 1);
         shader.setUniformTexture("scanlines", scanlineImage.getTextureReference(), 2);
+        shader.setUniform1f("time", ofGetElapsedTimef());
+        shader.setUniform1f("wavelength", (bButtonState)? 20.0 : 120.0);
+        shader.setUniform1f("amplitude", (bButtonState)? 120.0 : 10.0);
+        shader.setUniform1f("speed", speed);
+        shader.setUniform1i("scanlineHeight", scanlineHeight);
+        shader.setUniform1f("opacity", opacity);
+        shader.setUniform1f("scrollSpeed", ofMap(potValue, 0.0, 1024.0, 0.0, 500.0));
+        shader.setUniform1f("height", 720);
         quad.draw();
         shader.end();
         fbo.end();
+//        recordedVideoPlayback.getTextureReference().unbind();
         
-        fbo.draw(640+20, 20);
-        ofPopStyle();
+        fbo.draw(640+20, 80);
+//        ofPopStyle();
         
     }
 
@@ -261,9 +327,11 @@ void ofApp::videoSaved(ofVideoSavedEventArgs& e){
 	    recordedVideoPlayback.loadMovie(e.videoPath);
 	    recordedVideoPlayback.play();
         
-        if(bLaunchInQuicktime) {
-            ofSystem("open " + e.videoPath);
-        }
+        //clue for how to launch system commands
+        //could be used to send the last video somewhere
+//        if(bLaunchInQuicktime) {
+//            ofSystem("open " + e.videoPath);
+//        }
 	}
 	else {
 		ofLogError("videoSavedEvent") << "Video save error: " << e.error;

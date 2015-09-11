@@ -29,8 +29,6 @@ class ofApp : public ofBaseApp{
 	
     	vector<string> videoDevices;
 	    vector<string> audioDevices;
-    
-        bool bLaunchInQuicktime;
 
         ofImage scanlineImage;
         void generateScanlineImage(ofImage& img, int scanLineHeight, float opacity);
@@ -46,4 +44,15 @@ class ofApp : public ofBaseApp{
         ofFbo fbo;
         ofMesh quad;
         ofShader shader;
+    
+        ofArduino	arduino;
+        bool		bSetupArduino;			// flag variable for setting up arduino once
+        void setupArduino(const int & version);
+        void digitalPinChanged(const int & pinNum);
+        void analogPinChanged(const int & pinNum);
+        void updateArduino();
+    
+        bool bButtonState;
+        float potValue;
+
 };
