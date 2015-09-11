@@ -15,12 +15,6 @@ examples/
 emptyExample/
 node_modules/
 
-bin/
-!bin/data/
-!bin/libs/
-!bin/server/
-!bin/shaders//
-
 *.xcodeproj
 *.xcodeproj/
 *.plist
