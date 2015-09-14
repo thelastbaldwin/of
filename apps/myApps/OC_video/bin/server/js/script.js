@@ -96,7 +96,7 @@ function renderScene(){
 	if(isButtonPressed){
 		videoMaterial.uniforms.wavelength.value = 0.3;
 		videoMaterial.uniforms.amplitude.value = 0.09;
-		videoMaterial.uniforms.speed.value = 0.01;
+		videoMaterial.uniforms.speed.value = 0.02;
 	}else{
 		videoMaterial.uniforms.wavelength.value = 0.04;
 		videoMaterial.uniforms.amplitude.value = 0.006;
