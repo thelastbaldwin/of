@@ -1,19 +1,17 @@
 //set up knobs
 
 //set up THREEJS Scene
-//orthographic camera
-//full-size quad
 var scene,
 	camera,
 	renderer,
 	video,
 	videoTexture,
+	videoMaterial,
 	clock = new THREE.Clock(),
 	ASPECT_RATIO = 1280/720,
 	video = document.getElementById('oc-video'),
 	container = document.getElementById('container');
 
-init();
 function init(){
 	scene = new THREE.Scene();
 	var WIDTH = container.offsetWidth;
@@ -24,24 +22,57 @@ function init(){
 
 	videoTexture = new THREE.Texture(video);
 	videoTexture.minFilter = THREE.LinearFilter;
+	// videoTexture.wrapS = THREE.RepeatWrapping;
 
 	var plane = new THREE.PlaneBufferGeometry( WIDTH, HEIGHT );
-	var material = new THREE.ShaderMaterial({
+	videoMaterial = new THREE.ShaderMaterial({
 		uniforms: {
 			time: {
 				type: 'f',
 				value: clock.getElapsedTime() * 1000
 			},
+			scanlineThickness: {
+				type: 'f',
+				value: 4.0
+			},
+			scanlineOpacity: {
+				type: 'f',
+				value: 0.4
+			},
+			height: {
+				type: 'f',
+				value: HEIGHT
+			},
+			width: {
+				type: 'f',
+				value: WIDTH
+			},
 			videoTexture: {
 				type: 't',
 				value: videoTexture
+			},
+			scrollSpeed: {
+				type: 'f',
+				value: 0.003
+			},
+			wavelength: {
+				type: 'f',
+				value: 0.04
+			},
+			speed:{
+				type: 'f',
+				value: 0.007
+			},
+			amplitude: {
+				type: 'f',
+				value: 0.006
 			}
 		},
 		// map: videoTexture,
 		vertexShader: document.getElementById('vertex-shader').innerHTML,
 		fragmentShader: document.getElementById('fragment-shader').innerHTML
 	});
-	quad = new THREE.Mesh( plane, material );
+	quad = new THREE.Mesh( plane, videoMaterial );
 	quad.position.z = -100;
 	scene.add( quad );
 
@@ -58,9 +89,9 @@ function renderScene(){
 		videoTexture.needsUpdate = true;
 	}
 	//update uniforms
+	videoMaterial.uniforms.time.value = clock.getElapsedTime() * 100;
 	renderer.render(scene, camera);
 }
-
 
 window.onresize = function(){
 	var WIDTH = container.offsetWidth;
@@ -70,4 +101,9 @@ window.onresize = function(){
 	// update the camera
 	camera.aspect = WIDTH / HEIGHT;
 	camera.updateProjectionMatrix();
+
+	videoMaterial.uniforms.height.value = HEIGHT;
+	videoMaterial.uniforms.width.value = WIDTH;
 };
+
+init();
