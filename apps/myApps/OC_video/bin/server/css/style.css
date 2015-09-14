@@ -1,0 +1,22 @@
+*{
+	box-sizing: border-box;
+}
+
+html, body{
+	margin: 0;
+	padding: 0;
+}
+
+#container{
+	width: 70%;
+	margin: 0 auto;
+}
+
+video{
+	/*width: 100%;*/
+	display: none;
+}
+
+.controls{
+	background-color: #ccc;
+}

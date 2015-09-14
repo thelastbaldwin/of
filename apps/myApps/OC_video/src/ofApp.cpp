@@ -44,7 +44,7 @@ void ofApp::setup(){
     // vidRecorder->setVideoCodec(videoCodecs[2]);
 	
     // 5. Initialize the grabber.
-    vidGrabber.setDeviceID(1);
+    vidGrabber.setDeviceID(0);
     vidGrabber.initGrabber(1280, 720);
 
     // If desired, you can disable the preview video.  This can
