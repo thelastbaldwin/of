@@ -18,8 +18,23 @@
 	<script src="js/jquery-2.1.4.min.js"></script>
 	<script src="js/jquery.knob.min.js"></script>
 	<script src="js/three.min.js"></script>
-	<script id="vertex-shader" type="x-shader/x-vertex"></script>
-	<script id="fragment-shader" type="x-shader/x-fragment"></script>
+	<script id="vertex-shader" type="x-shader/x-vertex">
+		varying vec2 vUV;
+
+		void main() {
+			vUV = uv;
+  			gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
+		}
+	</script>
+	<script id="fragment-shader" type="x-shader/x-fragment">
+		varying vec2 vUV;
+		uniform sampler2D videoTexture;
+
+		void main() {
+			//gl_FragColor = mix(texture2D(videoTexture, vUV), vec4(1.0, 0.0, 0.0, 1.0), 0.5);
+			gl_FragColor = texture2D(videoTexture, vUV);
+		}
+	</script>
 	<script src="js/script.js"></script>
 </body>
 </html>

@@ -26,8 +26,20 @@ function init(){
 	videoTexture.minFilter = THREE.LinearFilter;
 
 	var plane = new THREE.PlaneBufferGeometry( WIDTH, HEIGHT );
-	var material = new THREE.MeshBasicMaterial({
-		map: videoTexture
+	var material = new THREE.ShaderMaterial({
+		uniforms: {
+			time: {
+				type: 'f',
+				value: clock.getElapsedTime() * 1000
+			},
+			videoTexture: {
+				type: 't',
+				value: videoTexture
+			}
+		},
+		// map: videoTexture,
+		vertexShader: document.getElementById('vertex-shader').innerHTML,
+		fragmentShader: document.getElementById('fragment-shader').innerHTML
 	});
 	quad = new THREE.Mesh( plane, material );
 	quad.position.z = -100;
