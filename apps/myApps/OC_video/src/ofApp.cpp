@@ -97,7 +97,7 @@ void ofApp::setup(){
     fbo.end();
     
     //arduino stuff
-    arduino.connect("/dev/tty.usbmodema0111", 57600);
+    arduino.connect("/dev/tty.usbmodem1411", 57600);
     
     // listen for EInitialized notification. this indicates that
     // the arduino is ready to receive commands and it is safe to
@@ -154,7 +154,7 @@ void ofApp::analogPinChanged(const int & pinNum) {
     // do something with the analog input. here we're simply going to print the pin number and
     // value to the screen each time it changes
     potValue = arduino.getAnalog(pinNum);
-    cout << potValue << endl;
+//    cout << potValue << endl;
 }
 
 
@@ -221,7 +221,7 @@ void ofApp::draw(){
         shader.setUniformTexture("scanlines", scanlineImage.getTextureReference(), 2);
         shader.setUniform1f("time", ofGetElapsedTimef());
         shader.setUniform1f("wavelength", (bButtonState)? 20.0 : 120.0);
-        shader.setUniform1f("amplitude", (bButtonState)? 120.0 : 10.0);
+        shader.setUniform1f("amplitude", (bButtonState)? 10.0 : 120.0);
         shader.setUniform1f("speed", speed);
         shader.setUniform1i("scanlineHeight", scanlineHeight);
         shader.setUniform1f("opacity", opacity);

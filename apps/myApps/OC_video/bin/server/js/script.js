@@ -7,6 +7,7 @@ var scene,
 	video,
 	videoTexture,
 	videoMaterial,
+	isButtonPressed = false,
 	clock = new THREE.Clock(),
 	ASPECT_RATIO = 1280/720,
 	video = document.getElementById('oc-video'),
@@ -53,7 +54,7 @@ function init(){
 			},
 			scrollSpeed: {
 				type: 'f',
-				value: 0.003
+				value: parseFloat(document.getElementById('scrollSpeed').value)
 			},
 			wavelength: {
 				type: 'f',
@@ -79,7 +80,7 @@ function init(){
 	renderer = new THREE.WebGLRenderer();
 	renderer.setSize(WIDTH, HEIGHT);
 
-	$('#WebGL-output').append(renderer.domElement);
+	document.getElementById('WebGL-output').appendChild(renderer.domElement);
 	renderScene();
 }
 
@@ -90,8 +91,23 @@ function renderScene(){
 	}
 	//update uniforms
 	videoMaterial.uniforms.time.value = clock.getElapsedTime() * 100;
+	videoMaterial.uniforms.scrollSpeed.value = document.getElementById('scrollSpeed').value;
+
+	if(isButtonPressed){
+		videoMaterial.uniforms.wavelength.value = 0.3;
+		videoMaterial.uniforms.amplitude.value = 0.09;
+		videoMaterial.uniforms.speed.value = 0.01;
+	}else{
+		videoMaterial.uniforms.wavelength.value = 0.04;
+		videoMaterial.uniforms.amplitude.value = 0.006;
+		videoMaterial.uniforms.speed.value = 0.007;
+	}
 	renderer.render(scene, camera);
 }
+
+document.getElementById('wigout').onclick = function(){
+	isButtonPressed = !isButtonPressed;
+};
 
 window.onresize = function(){
 	var WIDTH = container.offsetWidth;
