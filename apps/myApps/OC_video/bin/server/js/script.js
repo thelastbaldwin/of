@@ -1,4 +1,16 @@
 //set up knobs
+var scrollSpeedElem = document.querySelector('.knob.scrollSpeed');
+var scrollSpeedKnob = new Knob(scrollSpeedElem, 0.00001);
+
+var wavelengthElem = document.querySelector('.knob.wavelength');
+var wavelengthKnob = new Knob(wavelengthElem, 0.00001);
+
+var speedElem = document.querySelector('.knob.speed');
+var speedKnob = new Knob(speedElem, 0.00001);
+
+var amplitudeElem = document.querySelector('.knob.amplitude');
+var amplitudeKnob = new Knob(amplitudeElem, 0.00001);
+
 
 //set up THREEJS Scene
 var scene,
@@ -86,21 +98,21 @@ function init(){
 
 function renderScene(){
 	requestAnimationFrame(renderScene);
+	
 	if( video.readyState == video.HAVE_ENOUGH_DATA ){
 		videoTexture.needsUpdate = true;
 	}
 	//update uniforms
 	videoMaterial.uniforms.time.value = clock.getElapsedTime() * 100;
 	videoMaterial.uniforms.scrollSpeed.value = document.getElementById('scrollSpeed').value;
+	videoMaterial.uniforms.wavelength.value = document.getElementById('wavelength').value;
+	videoMaterial.uniforms.speed.value = document.getElementById('speed').value;
+	videoMaterial.uniforms.amplitude.value = document.getElementById('amplitude').value;
 
 	if(isButtonPressed){
 		videoMaterial.uniforms.wavelength.value = 0.3;
 		videoMaterial.uniforms.amplitude.value = 0.09;
 		videoMaterial.uniforms.speed.value = 0.02;
-	}else{
-		videoMaterial.uniforms.wavelength.value = 0.04;
-		videoMaterial.uniforms.amplitude.value = 0.006;
-		videoMaterial.uniforms.speed.value = 0.007;
 	}
 	renderer.render(scene, camera);
 }
@@ -123,3 +135,4 @@ window.onresize = function(){
 };
 
 init();
+

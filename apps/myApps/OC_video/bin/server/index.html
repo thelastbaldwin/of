@@ -1,6 +1,7 @@
 <html>
 <head>
 	<title>Client-side Tweaker</title>
+	<link rel="stylesheet" href="css/knob.css">
 	<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -13,9 +14,45 @@
 		</video>
 		<div class="controls">
 			<button type="button" id="wigout">Wig Out!</button>
-			<label>Scroll Speed:
-				<input type="range" id="scrollSpeed" min="0.0" max="0.01" value="0.003" step="0.001">
+			<label class="knob scrollSpeed">
+				<span class="label">Scroll Speed:</span>
+				<svg id="dial" class="dial" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+					 width="77.061px" height="77.061px" viewBox="0 0 77.061 77.061" enable-background="new 0 0 77.061 77.061" xml:space="preserve">
+				<circle fill="none" stroke="#000000" stroke-width="7" stroke-miterlimit="10" cx="38.531" cy="38.53" r="35.03"/>
+				<line fill="none" stroke="#000000" stroke-width="7" stroke-miterlimit="10" x1="38.531" y1="73.56" x2="38.531" y2="38.529"/>
+				</svg>
+				<input id="scrollSpeed" type="number" min="0.0" max="0.01" value="0.0" step="0.001">
 			</label>
+			<label class="knob wavelength">
+				<span class="label">Wavelength:</span>
+				<svg id="dial" class="dial" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+					 width="77.061px" height="77.061px" viewBox="0 0 77.061 77.061" enable-background="new 0 0 77.061 77.061" xml:space="preserve">
+				<circle fill="none" stroke="#000000" stroke-width="7" stroke-miterlimit="10" cx="38.531" cy="38.53" r="35.03"/>
+				<line fill="none" stroke="#000000" stroke-width="7" stroke-miterlimit="10" x1="38.531" y1="73.56" x2="38.531" y2="38.529"/>
+				</svg>
+				<input id="wavelength" type="number" min="0.01" max="0.05" value="0.01" step="0.001">
+			</label>
+			<label class="knob speed">
+				<span class="label">Speed:</span>
+				<svg id="dial" class="dial" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+					 width="77.061px" height="77.061px" viewBox="0 0 77.061 77.061" enable-background="new 0 0 77.061 77.061" xml:space="preserve">
+				<circle fill="none" stroke="#000000" stroke-width="7" stroke-miterlimit="10" cx="38.531" cy="38.53" r="35.03"/>
+				<line fill="none" stroke="#000000" stroke-width="7" stroke-miterlimit="10" x1="38.531" y1="73.56" x2="38.531" y2="38.529"/>
+				</svg>
+				<input id="speed" type="number" min="0.0" max="0.01" value="0.0" step="0.001">
+			</label>
+			<label class="knob amplitude">
+				<span class="label">Amplitude:</span>
+				<svg id="dial" class="dial" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+					 width="77.061px" height="77.061px" viewBox="0 0 77.061 77.061" enable-background="new 0 0 77.061 77.061" xml:space="preserve">
+				<circle fill="none" stroke="#000000" stroke-width="7" stroke-miterlimit="10" cx="38.531" cy="38.53" r="35.03"/>
+				<line fill="none" stroke="#000000" stroke-width="7" stroke-miterlimit="10" x1="38.531" y1="73.56" x2="38.531" y2="38.529"/>
+				</svg>
+				<input id="amplitude" type="number" min="0.0" max="0.01" value="0.0" step="0.001">
+			</label>
+<!-- 			<label>Scroll Speed:
+				<input type="range" id="scrollSpeed" min="0.0" max="0.01" value="0.003" step="0.001">
+			</label> -->
 		</div>
 	</div>
 	<script src="js/three.min.js"></script>
@@ -136,6 +173,7 @@
 			gl_FragColor = textureColor;
 		}
 	</script>
+	<script src="js/knob.js"></script>
 	<script src="js/script.js"></script>
 </body>
 </html>
